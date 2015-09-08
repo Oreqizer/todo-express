@@ -1,0 +1,29 @@
+{
+  "name": "todo-express",
+  "version": "0.1.0",
+  "description": "todo backend based on express",
+  "main": "app.js",
+  "scripts": {
+    "start": "node --harmony app.js",
+    "test": "gulp test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Oreqizer/todo-express.git"
+  },
+  "keywords": [
+    "todo",
+    "express",
+    "node",
+    "mean"
+  ],
+  "author": "Oreqizer",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Oreqizer/todo-express/issues"
+  },
+  "homepage": "https://github.com/Oreqizer/todo-express#readme",
+  "dependencies": {
+    "body-parser": "^1.13.3"
+  }
+}
