@@ -1,4 +1,12 @@
 'use strict';
 
-let express = require('./config/express'),
-    mongo = require('./config/mongo');
+// Load configured modules
+let express = require('./config/express');
+
+// Create express instance
+let app = express();
+
+// Listen at port 3000
+app.listen(3000);
+
+console.log('App listening at port 3000.');
