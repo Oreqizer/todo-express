@@ -17,4 +17,18 @@ module.exports = function(options) {
     
   });
   
+  // Runs 'nodemon' with the debug flag
+  gulp.task('server:debug', ['env:dev'], () => {
+    
+    $.nodemon({
+      script: 'app.js',
+      ext: 'js json',
+      tasks: ['lint'],
+      execMap: {
+        js: "node --debug"
+      }
+    });
+    
+  });
+  
 };

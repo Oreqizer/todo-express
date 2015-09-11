@@ -3,7 +3,7 @@
 // Load configured modules
 let express = require('./config/express');
 
-// Create express instance
+// Start the app
 let app = express();
 
 // Listen at port 3000

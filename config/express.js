@@ -8,6 +8,9 @@ let bodyParser = require('body-parser'),
     morgan = require('morgan'),
 	compress = require('compression');
 
+// Load Express plugins
+let handlebars = require('express-handlebars');
+
 // Define the Express configuration method
 module.exports = function() {
   // Create a new Express application instance
@@ -28,6 +31,10 @@ module.exports = function() {
   app.use(bodyParser.json());
   
   // Configure the templating engine
+  app.engine('handlebars', handlebars({
+    defaultLayout: 'main',
+    layoutsDir: 'app/views/layouts/'
+  }));
   app.set('view engine', 'handlebars');
 
   // Set the application view engine and 'views' folder
@@ -35,9 +42,19 @@ module.exports = function() {
 
   // Load the routing files
   require('../app/routes/users.routes')(app);
+  require('../app/routes/index.routes')(app);
 
   // Configure static file serving
   app.use(express.static('./public'));
+  
+  // Configure error handler:
+  app.use(function(err, req, res, next) {
+    
+    err.message = err.message || 'Internal server error!';
+    err.status = err.status || 500;
+    res.status(err.status).send(err.message);
+    
+  });
 
   // Return the Server instance
   return app;

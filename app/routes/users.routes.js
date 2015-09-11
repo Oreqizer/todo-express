@@ -3,25 +3,27 @@
 // Express router
 let router = require('express').Router();
 
-// 'users' controller containing functions
-let users = require('../controllers/users.ctrl');
+// 'users' and 'auth' controllers needed for user auth and manipulation
+let users = require('../controllers/users.ctrl'),
+    auth = require('../controllers/auth.ctrl');
 
 module.exports = function(app) {
   
   // Find all users
   router.get('/users', users.findAll);
 
-  // Find/remove user by ID
-  router.get('/users/:user_id', users.find);
-  router.delete('/users/:user_id', users.delete);
+  // Find user by ID: search, update or delete
+  router.get('/users/:username', users.find);
+  router.put('/users/:username', users.update);
+  router.delete('/users/:username', users.delete);
 
   // Login the requested user
-  router.post('/login', users.login);
+  router.get('/login', users.login);
 
   // Register a new user
-  router.post('/register', users.register);
+  router.post('/register', users.validate, users.register);
   
-  app.param('user_id', users.find);
+  // Register the router
   app.use('/api', router);
   
 };
