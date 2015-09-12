@@ -3,6 +3,7 @@
 // Test config
 module.exports = {
   db: 'localhost/todo-test',
+  secret: 'lolomgwtfroflmao_test',
   facebook: {
     clientID: 'XXX',
     clientSecret: 'XXX',

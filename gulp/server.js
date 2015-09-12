@@ -7,7 +7,7 @@ let $ = require('gulp-load-plugins')();
 module.exports = function(options) {
   
   // Runs the server with 'nodemon', linting on every change
-  gulp.task('server', ['env:dev'], () => {
+  gulp.task('server', ['env:dev', 'lint'], () => {
     
     $.nodemon({
       script: 'app.js',

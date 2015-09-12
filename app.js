@@ -1,10 +1,12 @@
 'use strict';
 
 // Load configured modules
-let express = require('./config/express');
+let express = require('./config/express'),
+    mongoose = require('./config/mongoose');
 
-// Start the app
-let app = express();
+// Start the app and database
+let db = mongoose(),
+    app = express();
 
 // Listen at port 3000
 app.listen(3000);

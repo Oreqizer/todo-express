@@ -18,10 +18,10 @@ module.exports = function(app) {
   router.delete('/users/:username', users.delete);
 
   // Login the requested user
-  router.get('/login', users.login);
+  router.post('/login', users.login, auth.token);
 
   // Register a new user
-  router.post('/register', users.validate, users.register);
+  router.post('/register', users.register);
   
   // Register the router
   app.use('/api', router);

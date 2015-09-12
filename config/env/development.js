@@ -3,6 +3,7 @@
 // Development config
 module.exports = {
   db: 'localhost/todo-dev',
+  secret: 'lolomgwtfroflmao_dev',
   facebook: {
     clientID: 'XXX',
     clientSecret: 'XXX',

@@ -1,8 +1,7 @@
 'use strict';
 
-// Get the 'users' collection
-let db = require('../../config/monk')(),
-    users = db.get('users');
+// Get the User model
+let User = require('mongoose').model('User');
 
 // Helper modules
 let v = require('validator'),
@@ -12,14 +11,14 @@ let v = require('validator'),
 let auth = require('./auth.ctrl');
 
 // ==== API functions =====
-// Returns all users
+// Returns all user
 exports.findAll = function(req, res, next) {
     
-  users.find({})
+  User.find({})
   .then(data => {
     res.json(data);
   }, err => {
-    catchMongoErrors(err, next);
+    mongoErrors(err, next);
   });
 
 };
@@ -27,33 +26,57 @@ exports.findAll = function(req, res, next) {
 // Returns a user by 'username'
 exports.find = function(req, res, next) {
 
-  users.findOne({
-    name: req.params.username
+  User.findOne({
+    username: req.params.username
   })
-  .then(data => {
-    res.json(data);
+  .then(user => {
+    if (!user) userNotFound(next);
+    res.json(user);
   }, err => {
-    catchMongoErrors(err, next);
+    mongoErrors(err, next);
   });
 
 };
   
 // Logs in a user
-exports.login = function(req, res) {
-
-
+exports.login = function(req, res, next) {
+  
+  User.findOne({
+    // Searches both the username and email
+    $or: [
+      { username: req.body.username },
+      { email: req.body.email }
+    ]
+  })
+  .then(user => {
+    // No user found
+    if (!user)
+      userNotFound(next);
+    req.user = user;
+    return auth.checkPassword(req.body.password, user.password);
+  })
+  .then(match => {
+    // Invalid password
+    if (!match)
+      userNotAuthorized('Invalid password', next);
+    next();
+  }, err => {
+    mongoErrors(err, next);
+  });
 
 };
   
 // Registers a user
 exports.register = function(req, res, next) {
   
-  users.insert(req.body)
+  let user = new User(req.body);
+  
+  user.save()
   .then(data => {
     res.send(data);
     next();
   }, err => {
-    catchMongoErrors(err, next);
+    mongoErrors(err, next);
   });
 
 };
@@ -72,59 +95,8 @@ exports.delete = function(req, res) {
 
 };
 
-// ===== Helper functions =====
-// Checks if all required fields are filled in
-exports.validate = function(req, res, next) {
-  
-  // Required fields
-  let message = [];
-  if (!req.body.username ||
-      !req.body.email ||
-      !req.body.password) {
-    message.push('Missing required fields');
-  }
-  
-  // Format errors and normalization
-  if (req.body.password && req.body.password.length < 6) {
-    message.push('Password too short');
-  } else {
-    req.body.salt = auth.salt();
-    req.body.password = auth.hash(req.body);
-  }
-  
-  if (req.body.email && !v.isEmail(req.body.email))
-    message.push('Wrong email format');
-  
-  if (req.body.username && v.matches(req.body.username, /\W+/i))
-    message.push('Invalid username');
-  
-  if (req.body.firstName) {
-    req.body.firstName = _.capitalize(_.deburr(req.body.firstName).toLowerCase());
-    if (v.matches(req.body.firstName, /[^A-z]/i)) 
-      message.push('Invalid first name format');
-  }
-  
-  if (req.body.lastName) {
-    req.body.lastName = _.capitalize(_.deburr(req.body.lastName).toLowerCase());
-    if (v.matches(req.body.lastName, /[^A-z]/i)) 
-      message.push('Invalid last name format');
-  }
-  
-  if (req.body.webpage && !v.isURL(req.body.webpage))
-    message.push('Invalid webpage URL');
-  
-  // Error out if error messages found
-  if (message.length > 0) {
-    let err = new Error();
-    err.message = message;
-    return next(err);
-  }
-
-  next();
-  
-};
-
-function catchMongoErrors(err, next) {
+// ===== Error functions =====
+function mongoErrors(err, next) {
   
   var message = '';
   
@@ -138,10 +110,28 @@ function catchMongoErrors(err, next) {
         message = 'Database error';
     }
   } else {
-    message = 'Database error';
+    message = err.toString();
   }
   
   err.message = message;
   next(err);
+  
+}
+
+function userNotFound(next) {
+  
+  let err = new Error();
+  err.message = 'User not found';
+  err.status = 404;
+  return next(err);
+  
+}
+
+function userNotAuthorized(message, next) {
+  
+  let err = new Error();
+  err.message = message;
+  err.status = 401;
+  return next(err);
   
 }

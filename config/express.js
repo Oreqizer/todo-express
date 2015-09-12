@@ -23,11 +23,10 @@ module.exports = function() {
       app.use(compress());
   }
 
-  // Use the 'body-parser'
+  // Use 'body-parser' for jsons
   app.use(bodyParser.urlencoded({
     extended: true
   }));
-
   app.use(bodyParser.json());
   
   // Configure the templating engine
@@ -50,7 +49,7 @@ module.exports = function() {
   // Configure error handler:
   app.use(function(err, req, res, next) {
     
-    err.message = err.message || 'Internal server error!';
+    err.message = err.message || 'Internal server error';
     err.status = err.status || 500;
     res.status(err.status).send(err.message);
     
