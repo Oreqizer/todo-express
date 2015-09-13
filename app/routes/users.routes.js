@@ -13,9 +13,9 @@ module.exports = function(app) {
   router.get('/users', users.findAll);
 
   // Find user by ID: search, update or delete
-  router.get('/users/:username', users.find);
-  router.put('/users/:username', users.update);
-  router.delete('/users/:username', users.delete);
+  router.get('/users/:id', users.find);
+  router.put('/users/:id', auth.authorize, users.update);
+  router.delete('/users/:id', auth.authorize, users.delete);
 
   // Login the requested user
   router.post('/login', users.login, auth.token);

@@ -32,6 +32,7 @@ let UserSchema = new Schema({
   username: { type: String, required: true, index: { unique: true }, match: /^\w+$/i },
   email: { type: String, required: true, index: { unique: true }, match: /.+\@.+\.+/ },
   password: { type: String, validate: passwordVal },
+  scope: { type: String, enum: ['owner', 'admin', 'user'], default: 'user' },
   firstName: { type: String, match: /^[a-zA-Z]+$/ },
   lastName: { type: String, match: /^[a-zA-Z]+$/ },
   webpage: { type: String, validate: urlVal }

@@ -12,6 +12,7 @@ module.exports = function(options) {
     
     gulp.src([
       'app/**/*.js',
+      '!app/**/*.spec.js',
       'config/**/*.js',
       'public/**/*.js',
       'app.js'

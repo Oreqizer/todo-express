@@ -11,14 +11,31 @@ let config = require('../../config/config');
 // Auth-related express middleware
 exports.authorize = function(req, res, next) {
   
+  let token = req.body.token;
+  if (!token)
+    unauthorized('No access token', next);
   
+  let decoded;
+  try {
+    decoded = jwt.verify(token, config.secret);
+  } catch(err) {
+    next(err);
+  }
+    
+  if (decoded.exp < Date.now())
+    unauthorized('Access token expired', next);
+    
+  if (decoded.iss !== req.params.id)
+    unauthorized('Token ID does not match requested ID', next);
+  
+  next();
   
 };
 
 // Returns a valid JWT token
 exports.token = function(req, res, next) {
   
-  let expires = moment().add('days', 7).valueOf();
+  let expires = moment().add(7, 'days').valueOf();
   let token = jwt.sign({
     iss: req.user._id,
     exp: expires
@@ -58,3 +75,13 @@ exports.checkPassword = function(requested, stored) {
   });
   
 };
+
+// Error handler:
+function unauthorized(message, next) {
+  
+  let err = new Error();
+  err.status = 401;
+  err.message = message;
+  next(err);
+  
+}

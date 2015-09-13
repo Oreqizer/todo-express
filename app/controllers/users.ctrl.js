@@ -10,7 +10,7 @@ let v = require('validator'),
 // Auth module
 let auth = require('./auth.ctrl');
 
-// ==== API functions =====
+// ===== API functions =====
 // Returns all user
 exports.findAll = function(req, res, next) {
     
@@ -27,11 +27,46 @@ exports.findAll = function(req, res, next) {
 exports.find = function(req, res, next) {
 
   User.findOne({
-    username: req.params.username
+    _id: req.params.id
   })
   .then(user => {
-    if (!user) userNotFound(next);
+    if (!user)
+      return next(userNotFound());
     res.json(user);
+  }, err => {
+    mongoErrors(err, next);
+  });
+
+};
+  
+// Updates the user info
+exports.update = function(req, res, next) {
+
+  User.findByIdAndUpdate(req.params.id, {
+    $set: req.body.user
+  }, {
+    new: true
+  })
+  .then(user => {
+    if (!user)
+      return next(userNotFound());
+    res.json(user);
+    next();
+  }, err => {
+    mongoErrors(err, next);
+  });
+
+};
+  
+// Deletes a user
+exports.delete = function(req, res, next) {
+
+  User.findByIdAndRemove(req.params.id)
+  .then(user => {
+    if (!user)
+      return next(userNotFound());
+    res.status(200).send('User deleted');
+    next();
   }, err => {
     mongoErrors(err, next);
   });
@@ -51,17 +86,18 @@ exports.login = function(req, res, next) {
   .then(user => {
     // No user found
     if (!user)
-      userNotFound(next);
+      throw userNotFound();
     req.user = user;
     return auth.checkPassword(req.body.password, user.password);
   })
   .then(match => {
     // Invalid password
     if (!match)
-      userNotAuthorized('Invalid password', next);
+      throw userNotAuthorized('Invalid password');
     next();
-  }, err => {
-    mongoErrors(err, next);
+  })
+  .catch(err => {
+    next(err);
   });
 
 };
@@ -80,24 +116,11 @@ exports.register = function(req, res, next) {
   });
 
 };
-  
-// Updates the user info
-exports.update = function(req, res) {
-
-
-
-};
-  
-// Deletes a user
-exports.delete = function(req, res) {
-
-
-
-};
 
 // ===== Error functions =====
 function mongoErrors(err, next) {
   
+  err.status = 409;
   var message = '';
   
   if (err.code) {
@@ -118,20 +141,20 @@ function mongoErrors(err, next) {
   
 }
 
-function userNotFound(next) {
+function userNotFound() {
   
   let err = new Error();
   err.message = 'User not found';
   err.status = 404;
-  return next(err);
+  return err;
   
 }
 
-function userNotAuthorized(message, next) {
+function userNotAuthorized(message) {
   
   let err = new Error();
   err.message = message;
   err.status = 401;
-  return next(err);
+  return err;
   
 }
