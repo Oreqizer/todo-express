@@ -18,9 +18,9 @@ module.exports = function() {
 
   // Use the 'NODE_ENV' variable to activate the 'morgan' logger or 'compress' middleware
   if (process.env.NODE_ENV === 'development') {
-      app.use(morgan('dev'));
+    app.use(morgan('dev'));
   } else if (process.env.NODE_ENV === 'production') {
-      app.use(compress());
+    app.use(compress());
   }
 
   // Use 'body-parser' for jsons
@@ -28,7 +28,7 @@ module.exports = function() {
     extended: true
   }));
   app.use(bodyParser.json());
-  
+
   // Configure the templating engine
   app.engine('handlebars', handlebars({
     defaultLayout: 'main',
@@ -44,14 +44,14 @@ module.exports = function() {
 
   // Configure static file serving
   app.use(express.static('./public'));
-  
+
   // Configure error handler:
   app.use(function(err, req, res, next) {
-    
+
     err.message = err.message || 'Internal server error';
     err.status = err.status || 500;
     res.status(err.status).send(err.message);
-    
+
   });
 
   // Return the Server instance

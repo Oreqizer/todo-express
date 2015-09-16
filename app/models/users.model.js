@@ -1,15 +1,20 @@
 'use strict';
 
-// Load the modelling module
-let mongoose = require('mongoose'),
-    Schema = mongoose.Schema;
+/**
+ * Contains user model schema, validators and normalizers
+ * @module usersModel
+ */
 
-// Helper modules:
-let v = require('validator'),
+// Load modules
+let crypt = require('../../utils/crypt');
+
+// Load dependencies
+let mongoose = require('mongoose'),
+    v = require('validator'),
     _ = require('lodash');
 
-// Security module
-let auth = require('../controllers/auth.ctrl');
+// Load module builder
+let Schema = mongoose.Schema;
 
 // Validation functions
 let urlVal = [
@@ -28,24 +33,24 @@ let passwordVal = [
 
 // Schema definition
 let UserSchema = new Schema({
-  
-  username: { type: String, required: true, index: { unique: true }, match: /^\w+$/i },
-  email: { type: String, required: true, index: { unique: true }, match: /.+\@.+\.+/ },
-  password: { type: String, validate: passwordVal },
-  scope: { type: String, enum: ['owner', 'admin', 'user'], default: 'user' },
-  firstName: { type: String, match: /^[a-zA-Z]+$/ },
-  lastName: { type: String, match: /^[a-zA-Z]+$/ },
-  webpage: { type: String, validate: urlVal }
-  
+
+  username: {type: String, required: true, index: {unique: true}, match: /^\w+$/i},
+  email: {type: String, required: true, index: {unique: true}, match: /.+\@.+\.+/},
+  password: {type: String, validate: passwordVal},
+  scope: {type: String, enum: ['owner', 'admin', 'user'], default: 'user'},
+  firstName: {type: String, match: /^[a-zA-Z]+$/},
+  lastName: {type: String, match: /^[a-zA-Z]+$/},
+  webpage: {type: String, validate: urlVal}
+
 });
 
 // Pre-save data manipulation
 UserSchema.pre('save', function(next) {
-  
+
   this.firstName = _.capitalize(_.deburr(this.firstName).toLowerCase());
   this.lastName = _.capitalize(_.deburr(this.lastName).toLowerCase());
-  
-  auth.hash(this.password)
+
+  crypt.hash(this.password)
   .then(hash => {
     this.password = hash;
     next();
@@ -53,7 +58,7 @@ UserSchema.pre('save', function(next) {
   .catch(err => {
     next(err);
   });
-  
+
 });
 
 // Register the model

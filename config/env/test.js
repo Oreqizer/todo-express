@@ -3,6 +3,8 @@
 // Test config
 module.exports = {
   db: 'localhost/todo-test',
+  env: 'test',
+  port: process.env.PORT || 3000,
   secret: 'lolomgwtfroflmao_test',
   facebook: {
     clientID: 'XXX',

@@ -6,10 +6,10 @@ let gulp = require('gulp'),
 let $ = require('gulp-load-plugins')();
 
 module.exports = function(options) {
-  
+
   // Lints .js files and gives a report
   gulp.task('lint', () => {
-    
+
     gulp.src([
       'app/**/*.js',
       '!app/**/*.spec.js',
@@ -17,9 +17,12 @@ module.exports = function(options) {
       'public/**/*.js',
       'app.js'
     ])
+      .pipe($.plumber())
       .pipe($.jshint())
-      .pipe($.jshint.reporter(stylish));
-    
+      .pipe($.jscs())
+      .pipe($.jscsStylish.combineWithHintResults())
+      .pipe($.jshint.reporter('jshint-stylish'));
+
   });
-  
+
 };

@@ -3,6 +3,8 @@
 // Development config
 module.exports = {
   db: 'localhost/todo-dev',
+  env: 'development',
+  port: process.env.PORT || 3000,
   secret: 'lolomgwtfroflmao_dev',
   facebook: {
     clientID: 'XXX',

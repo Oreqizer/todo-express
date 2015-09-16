@@ -1,46 +1,75 @@
 'use strict';
 
-// Get the User model
-let User = require('mongoose').model('User');
+/**
+ * Contains all the functions for direct user manipulation
+ * @module usersCtrl
+ */
 
-// Helper modules
-let v = require('validator'),
+// Load modules
+let config = require('../../config/config'),
+    crypt = require('../../utils/crypt'),
+    e = require('../../utils/error');
+
+// Load dependencies
+let jwt = require('jsonwebtoken'),
+    moment = require('moment'),
+    v = require('validator'),
     _ = require('lodash');
 
-// Auth module
-let auth = require('./auth.ctrl');
+// Load models
+let User = require('mongoose').model('User');
 
-// ===== API functions =====
-// Returns all user
+/**
+ * [Middleware] Finds all users in the database
+ * @param {Object}   req  - http request object
+ * @param {Object}   res  - http response object
+ * @param {Function} next - invokes next middleware
+ */
 exports.findAll = function(req, res, next) {
-    
+
   User.find({})
   .then(data => {
     res.json(data);
   }, err => {
-    mongoErrors(err, next);
+    next(e.mongoError(err));
   });
 
 };
-  
-// Returns a user by 'username'
+
+/**
+ * [Middleware] Returns a user by ID
+ * @param   {Object}   req  - http request object
+ * @param   {Object}   res  - http response object
+ * @param   {Function} next - invokes next middleware
+ * @returns {Function} prematurely ends the function if an error occurs
+ */
 exports.find = function(req, res, next) {
 
-  User.findOne({
-    _id: req.params.id
-  })
+  User.findById(req.params.id)
   .then(user => {
-    if (!user)
-      return next(userNotFound());
+    if (!user) {
+      return next(e.error(404, 'User not found'));
+    }
     res.json(user);
+    next();
   }, err => {
-    mongoErrors(err, next);
+    next(e.mongoError(err));
   });
 
 };
-  
-// Updates the user info
+
+/**
+ * [Middleware] Updated the user info
+ * @param   {Object}   req  - http request object
+ * @param   {Object}   res  - http response object
+ * @param   {Function} next - invokes next middleware
+ * @returns {Function} prematurely ends the function if an error occurs
+ */
 exports.update = function(req, res, next) {
+
+  if (req.body.iss !== req.params.id) {
+    return next(e.error(401, 'Token and request ID mismatch'));
+  }
 
   User.findByIdAndUpdate(req.params.id, {
     $set: req.body.user
@@ -48,52 +77,72 @@ exports.update = function(req, res, next) {
     new: true
   })
   .then(user => {
-    if (!user)
-      return next(userNotFound());
+    if (!user) {
+      return next(e.error(404, 'User not found'));
+    }
     res.json(user);
     next();
   }, err => {
-    mongoErrors(err, next);
+    next(e.mongoError(err));
   });
 
 };
-  
-// Deletes a user
+
+/**
+ * [Middleware] Deletes a user
+ * @param   {Object}   req  - http request object
+ * @param   {Object}   res  - http response object
+ * @param   {Function} next - invokes next middleware
+ * @returns {Function} prematurely ends the function if an error occurs
+ */
 exports.delete = function(req, res, next) {
+
+  if (req.body.iss !== req.params.id) {
+    return next(e.error(401, 'Token and request ID mismatch'));
+  }
 
   User.findByIdAndRemove(req.params.id)
   .then(user => {
-    if (!user)
-      return next(userNotFound());
-    res.status(200).send('User deleted');
+    if (!user) {
+      return next(e.error(404, 'User not found'));
+    }
+    res.status(204).send('User deleted');
     next();
   }, err => {
-    mongoErrors(err, next);
+    next(e.mongoError(err));
   });
 
 };
-  
-// Logs in a user
+
+/**
+ * [Middleware] Logs in a user
+ * @param   {Object}   req  - http request object
+ * @param   {Object}   res  - http response object
+ * @param   {Function} next - invokes next middleware
+ * @returns {Function} prematurely ends the function if an error occurs
+ */
 exports.login = function(req, res, next) {
-  
+
   User.findOne({
     // Searches both the username and email
     $or: [
-      { username: req.body.username },
-      { email: req.body.email }
+      {username: req.body.username},
+      {email: req.body.email}
     ]
   })
   .then(user => {
     // No user found
-    if (!user)
-      throw userNotFound();
+    if (!user) {
+      return next(e.error(404, 'User not found'));
+    }
     req.user = user;
-    return auth.checkPassword(req.body.password, user.password);
+    return crypt.checkPassword(req.body.password, user.password);
   })
   .then(match => {
     // Invalid password
-    if (!match)
-      throw userNotAuthorized('Invalid password');
+    if (!match) {
+      return next(e.error(401, 'Invalid password'));
+    }
     next();
   })
   .catch(err => {
@@ -101,60 +150,77 @@ exports.login = function(req, res, next) {
   });
 
 };
-  
-// Registers a user
+
+/**
+ * [Middleware] Registers a new user
+ * @param   {Object}   req  - http request object
+ * @param   {Object}   res  - http response object
+ * @param   {Function} next - invokes next middleware
+ * @returns {Function} prematurely ends the function if an error occurs
+ */
 exports.register = function(req, res, next) {
-  
+
   let user = new User(req.body);
-  
+
   user.save()
-  .then(data => {
-    res.send(data);
+  .then(user => {
+    res.status(201).send(user);
     next();
   }, err => {
-    mongoErrors(err, next);
+    next(e.mongoError(err));
   });
 
 };
 
-// ===== Error functions =====
-function mongoErrors(err, next) {
-  
-  err.status = 409;
-  var message = '';
-  
-  if (err.code) {
-    switch (err.code) {
-      case 11000:
-      case 11001:
-        message = 'Username or email already taken';
-        break;
-      default:
-        message = 'Database error';
-    }
-  } else {
-    message = err.toString();
+/**
+ * [Middleware] Checks incoming request's token
+ * @param   {Object}   req  - http request object
+ * @param   {Object}   res  - http response object
+ * @param   {Function} next - invokes next middleware
+ * @returns {Function} prematurely ends the function if an error occurs
+ */
+exports.authorize = function(req, res, next) {
+
+  let token = req.body.token;
+  if (!token) {
+    return next(e.error(401, 'No access token found'));
   }
-  
-  err.message = message;
-  next(err);
-  
-}
+  let decoded;
+  try {
+    decoded = jwt.verify(token, config.secret);
+  } catch (err) {
+    next(err);
+  }
 
-function userNotFound() {
-  
-  let err = new Error();
-  err.message = 'User not found';
-  err.status = 404;
-  return err;
-  
-}
+  if (decoded.exp < Date.now()) {
+    return next(e.error(401, 'Access token expired'));
+  }
+  req.body.iss = decoded.iss;
 
-function userNotAuthorized(message) {
-  
-  let err = new Error();
-  err.message = message;
-  err.status = 401;
-  return err;
-  
-}
+  next();
+
+};
+
+/**
+ * [Middleware] Returns a valid JWT token
+ * @param   {Object}   req  - http request object
+ * @param   {Object}   res  - http response object
+ * @param   {Function} next - invokes next middleware
+ */
+exports.token = function(req, res, next) {
+
+  let expires = moment().add(7, 'days').valueOf();
+  let token = jwt.sign({
+    iss: req.user._id,
+    exp: expires
+  }, config.secret);
+
+  res.json({
+    token,
+    expires,
+    user: req.user.toJSON()
+  });
+
+  next();
+
+};

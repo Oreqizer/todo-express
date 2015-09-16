@@ -1,29 +1,37 @@
 'use strict';
 
-// Express router
+/**
+ * Contains all the routes for user manipulation
+ * @module usersRouter
+ */
+
+// Load modules
+let users = require('../controllers/users.ctrl');
+
+// Load Express router
 let router = require('express').Router();
 
-// 'users' and 'auth' controllers needed for user auth and manipulation
-let users = require('../controllers/users.ctrl'),
-    auth = require('../controllers/auth.ctrl');
-
+/**
+ * Applies all user related routes to the app
+ * @param {Object} app - the Express app instance
+ */
 module.exports = function(app) {
-  
+
   // Find all users
   router.get('/users', users.findAll);
 
   // Find user by ID: search, update or delete
   router.get('/users/:id', users.find);
-  router.put('/users/:id', auth.authorize, users.update);
-  router.delete('/users/:id', auth.authorize, users.delete);
+  router.put('/users/:id', users.authorize, users.update);
+  router.delete('/users/:id', users.authorize, users.delete);
 
   // Login the requested user
-  router.post('/login', users.login, auth.token);
+  router.post('/login', users.login, users.token);
 
   // Register a new user
   router.post('/register', users.register);
-  
+
   // Register the router
   app.use('/api', router);
-  
+
 };

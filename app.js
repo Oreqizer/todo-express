@@ -4,13 +4,16 @@
 let express = require('./config/express'),
     mongoose = require('./config/mongoose');
 
+// Load config
+let config = require('./config/config');
+
 // Start the app and database
 let db = mongoose(),
     app = express();
 
 // Listen at port 3000
-app.listen(3000);
+app.listen(config.port);
 
-console.log('App listening at port 3000.');
+console.log(`Running '${config.env}' app at port ${config.port}.`);
 
 module.exports = app;
