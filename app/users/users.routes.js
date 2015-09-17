@@ -6,7 +6,7 @@
  */
 
 // Load modules
-let users = require('../controllers/users.ctrl');
+let users = require('./users.ctrl');
 
 // Load Express router
 let router = require('express').Router();
@@ -22,8 +22,8 @@ module.exports = function(app) {
 
   // Find user by ID: search, update or delete
   router.get('/users/:id', users.find);
-  router.put('/users/:id', users.authorize, users.update);
-  router.delete('/users/:id', users.authorize, users.delete);
+  router.put('/users/:id', users.authorize, users.isOwner, users.update);
+  router.delete('/users/:id', users.authorize, users.isOwner, users.delete);
 
   // Login the requested user
   router.post('/login', users.login, users.token);

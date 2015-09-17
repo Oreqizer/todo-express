@@ -17,7 +17,7 @@ let User = mongoose.model('User');
 // Global test variables
 var user, user2, token;
 
-describe('user routes:', () => {
+describe('User routes:', () => {
 
   beforeEach((done) => {
 
@@ -63,7 +63,9 @@ describe('user routes:', () => {
         .expect('Content-Type', /json/)
         .expect(200)
         .end((err, res) => {
-          if (err) return done(err);
+          if (err) {
+            return done(err);
+          }
           expect(res.body).to.be.an('array');
           expect(res.body).to.have.length(2);
           expect(res.body[0].username).to.be('test');
@@ -79,7 +81,9 @@ describe('user routes:', () => {
         .expect('Content-Type', /json/)
         .expect(200)
         .end((err, res) => {
-          if (err) return done(err);
+          if (err) {
+            return done(err);
+          }
           expect(res.body).to.be.an('object');
           expect(res.body.username).to.be('test');
           done();
@@ -121,7 +125,9 @@ describe('user routes:', () => {
         .expect('Content-Type', /json/)
         .expect(200)
         .end((err, res) => {
-          if (err) return done(err);
+          if (err) {
+            return done(err);
+          }
           expect(res.body).to.be.an('object');
           expect(res.body.username).to.be('updated');
           done();
@@ -195,11 +201,13 @@ describe('user routes:', () => {
 
       request(app)
         .post('/api/login')
-        .send({ username: 'test', password: 'heslojeveslo' })
+        .send({username: 'test', password: 'heslojeveslo'})
         .expect('Content-Type', /json/)
         .expect(200)
         .end((err, res) => {
-          if (err) return done(err);
+          if (err) {
+            return done(err);
+          }
           expect(res.body).to.be.an('object');
           expect(res.body.token).to.be.a('string');
           expect(res.body.expires).to.be.a('number');
@@ -213,7 +221,7 @@ describe('user routes:', () => {
 
       request(app)
         .post('/api/login')
-        .send({ username: 'invalidtest', password: 'heslojeveslo' })
+        .send({username: 'invalidtest', password: 'heslojeveslo'})
         .expect(404, done);
 
     });
@@ -222,7 +230,7 @@ describe('user routes:', () => {
 
       request(app)
         .post('/api/login')
-        .send({ username: 'test', password: 'veslojeheslo' })
+        .send({username: 'test', password: 'veslojeheslo'})
         .expect(401, done);
 
     });
@@ -236,11 +244,13 @@ describe('user routes:', () => {
 
       request(app)
         .post('/api/register')
-        .send({ username: 'test3', email: 'test3@test.com', password: 'heslojeveslo' })
+        .send({username: 'test3', email: 'test3@test.com', password: 'heslojeveslo'})
         .expect('Content-Type', /json/)
         .expect(201)
         .end((err, res) => {
-          if (err) return done(err);
+          if (err) {
+            return done(err);
+          }
           expect(res.body).to.be.an('object');
           expect(res.body.username).to.be('test3');
           expect(res.body.password).not.to.be('heslojeveslo');
@@ -253,7 +263,7 @@ describe('user routes:', () => {
 
       request(app)
         .post('/api/register')
-        .send({ username: 'test', email: 'test@test.com', password: 'heslojeveslo' })
+        .send({username: 'test', email: 'test@test.com', password: 'heslojeveslo'})
         .expect(409, done);
 
     });

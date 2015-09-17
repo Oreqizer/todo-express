@@ -67,10 +67,6 @@ exports.find = function(req, res, next) {
  */
 exports.update = function(req, res, next) {
 
-  if (req.body.iss !== req.params.id) {
-    return next(e.error(401, 'Token and request ID mismatch'));
-  }
-
   User.findByIdAndUpdate(req.params.id, {
     $set: req.body.user
   }, {
@@ -96,10 +92,6 @@ exports.update = function(req, res, next) {
  * @returns {Function} prematurely ends the function if an error occurs
  */
 exports.delete = function(req, res, next) {
-
-  if (req.body.iss !== req.params.id) {
-    return next(e.error(401, 'Token and request ID mismatch'));
-  }
 
   User.findByIdAndRemove(req.params.id)
   .then(user => {
@@ -185,6 +177,7 @@ exports.authorize = function(req, res, next) {
   if (!token) {
     return next(e.error(401, 'No access token found'));
   }
+
   let decoded;
   try {
     decoded = jwt.verify(token, config.secret);
@@ -196,6 +189,23 @@ exports.authorize = function(req, res, next) {
     return next(e.error(401, 'Access token expired'));
   }
   req.body.iss = decoded.iss;
+
+  next();
+
+};
+
+/**
+ * [Middleware] Checks if the token's ID matches request ID
+ * @param   {Object}   req  - http request object
+ * @param   {Object}   res  - http response object
+ * @param   {Function} next - invokes next middleware
+ * @returns {Function} prematurely ends the function if an error occurs
+ */
+exports.isOwner = function(req, res, next) {
+
+  if (req.body.iss !== req.params.id) {
+    return next(e.error(401, 'Token and request ID mismatch'));
+  }
 
   next();
 

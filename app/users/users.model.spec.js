@@ -35,8 +35,13 @@ describe('Unit testing user models:', () => {
 
   });
 
-  // Test user saving
-  it('Should save a new user', (done) => {
+  it('should save a new user', (done) => {
+
+    // TODO
+
+  });
+
+  it('Should update an existing new user', (done) => {
 
     // TODO
 

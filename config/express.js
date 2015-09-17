@@ -3,46 +3,47 @@
 // Load main modules
 let express = require('express');
 
-// Load secondary modules
+// Load middleware modules
 let bodyParser = require('body-parser'),
     morgan = require('morgan'),
-	compress = require('compression');
+  compress = require('compression');
+
+// Load helper modules
+let wrench = require('wrench');
 
 // Load Express plugins
 let handlebars = require('express-handlebars');
 
-// Define the Express configuration method
 module.exports = function() {
-  // Create a new Express application instance
+
   let app = express();
 
-  // Use the 'NODE_ENV' variable to activate the 'morgan' logger or 'compress' middleware
   if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
   } else if (process.env.NODE_ENV === 'production') {
     app.use(compress());
   }
 
-  // Use 'body-parser' for jsons
   app.use(bodyParser.urlencoded({
     extended: true
   }));
   app.use(bodyParser.json());
 
-  // Configure the templating engine
   app.engine('handlebars', handlebars({
     defaultLayout: 'main',
     layoutsDir: 'app/views/layouts/'
   }));
-  app.set('view engine', 'handlebars');
 
-  // Set the application view engine and 'views' folder
+  app.set('view engine', 'handlebars');
   app.set('views', './app/views');
 
-  // Load the routing files
-  require('../app/routes/users.routes')(app);
+  // Load all routers
+  wrench.readdirSyncRecursive('./app')
+  .filter(file => (/\.routes\.js$/i).test(file))
+  .map(file => {
+    require(`../app/${file}`)(app);
+  });
 
-  // Configure static file serving
   app.use(express.static('./public'));
 
   // Configure error handler:
@@ -54,6 +55,5 @@ module.exports = function() {
 
   });
 
-  // Return the Server instance
   return app;
 };
