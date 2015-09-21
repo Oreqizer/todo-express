@@ -15,7 +15,7 @@ var user;
 
 describe('Unit testing user models:', () => {
 
-  beforeEach((done) => {
+  beforeEach(() => {
 
     // Create a new 'User' model instance
     user = new User({
@@ -26,8 +26,15 @@ describe('Unit testing user models:', () => {
 
     });
 
+  });
+
+  it('should save a new user correctly', (done) => {
+
     user.save()
-    .then(() => {
+    .then(data => {
+      expect(data).to.be.an('object');
+      expect(data.username).to.be('test');
+      expect(data.password).not.to.be('heslojeveslo');
       done();
     }, err => {
       done(err);
@@ -35,15 +42,60 @@ describe('Unit testing user models:', () => {
 
   });
 
-  it('should save a new user', (done) => {
+  it('should not save a user without username', (done) => {
 
-    // TODO
+    user.username = undefined;
+
+    user.save()
+    .then(null, err => {
+      expect(err).to.be.an('object');
+      done();
+    });
 
   });
 
-  it('Should update an existing new user', (done) => {
+  it('should not save a user without email', (done) => {
 
-    // TODO
+    user.email = undefined;
+
+    user.save()
+    .then(null, err => {
+      expect(err).to.be.an('object');
+      done();
+    });
+
+  });
+
+  it('should not save a user with short password', (done) => {
+
+    user.password = 'abcde';
+
+    user.save()
+    .then(null, err => {
+      expect(err).to.be.an('object');
+      done();
+    });
+
+  });
+
+  it('should not save a user twice', (done) => {
+
+    user.save()
+    .then(data => {
+      let dup = new User({
+
+        username: 'test',
+        email: 'test@test.com',
+        password: 'heslojeveslo'
+
+      });
+      return dup.save();
+    })
+    .then(null, err => {
+      expect(err).to.be.an('object');
+      expect(err.code).to.be(11000);
+      done();
+    });
 
   });
 

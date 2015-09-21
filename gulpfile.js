@@ -4,9 +4,15 @@ let gulp = require('gulp'),
     wrench = require('wrench');
 
 let options = {
-  tmp: '.tmp',
+
   public: 'public',
-  dist: 'public/dist'
+  tmp: 'public/.tmp',
+  dist: 'public/dist',
+  app: [
+    'app/**/*.js',
+    '!node_modules/**'
+  ]
+
 };
 
 wrench.readdirSyncRecursive('./gulp')
@@ -16,5 +22,7 @@ wrench.readdirSyncRecursive('./gulp')
   });
 
 gulp.task('default', () => {
+
   gulp.start('server');
+
 });

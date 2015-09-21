@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * Configuration of the Express instance
+ * @module Express
+ */
+
 // Load main modules
 let express = require('express');
 
@@ -14,6 +19,10 @@ let wrench = require('wrench');
 // Load Express plugins
 let handlebars = require('express-handlebars');
 
+/**
+ * Sets up all the necessary configuration of Express
+ * @returns {Object} the Express application instance
+ */
 module.exports = function() {
 
   let app = express();
@@ -37,7 +46,7 @@ module.exports = function() {
   app.set('view engine', 'handlebars');
   app.set('views', './app/views');
 
-  // Load all routers
+  // Loads all routers
   wrench.readdirSyncRecursive('./app')
   .filter(file => (/\.routes\.js$/i).test(file))
   .map(file => {
@@ -46,7 +55,7 @@ module.exports = function() {
 
   app.use(express.static('./public'));
 
-  // Configure error handler:
+  // [Middleware] Error handler
   app.use(function(err, req, res, next) {
 
     err.message = err.message || 'Internal server error';

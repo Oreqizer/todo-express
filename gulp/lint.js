@@ -10,12 +10,7 @@ module.exports = function(options) {
   // Lints .js files and gives a report
   gulp.task('lint', () => {
 
-    gulp.src([
-      'app/**/*.js',
-      'config/**/*.js',
-      'public/**/*.js',
-      'app.js'
-    ])
+    gulp.src(options.app)
       .pipe($.plumber())
       .pipe($.jshint())
       .pipe($.jscs())

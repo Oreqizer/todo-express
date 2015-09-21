@@ -31,7 +31,10 @@ let passwordVal = [
   'Password too short'
 ];
 
-// Schema definition
+/**
+ * Defines the user model schema
+ * @class
+ */
 let UserSchema = new Schema({
 
   username: {type: String, required: true, index: {unique: true}, match: /^\w+$/i},
@@ -44,7 +47,10 @@ let UserSchema = new Schema({
 
 });
 
-// Pre-save data manipulation
+/**
+ * Normalizes names and hashes the password before saving a new user
+ * @memberof module~UserSchema
+ */
 UserSchema.pre('save', function(next) {
 
   this.firstName = _.capitalize(_.deburr(this.firstName).toLowerCase());
@@ -61,5 +67,5 @@ UserSchema.pre('save', function(next) {
 
 });
 
-// Register the model
+/** Registers the new model */
 mongoose.model('User', UserSchema);

@@ -25,7 +25,7 @@ module.exports = function(options) {
       ext: 'js json',
       tasks: ['lint'],
       execMap: {
-        js: "node --debug"
+        js:'node --debug'
       }
     });
 

@@ -10,7 +10,7 @@ module.exports = function(options) {
   gulp.task('test', ['env:test', 'lint'], () => {
 
     gulp.src('app/**/*.spec.js')
-      .pipe($.mocha({ reporter: 'nyan' }));
+      .pipe($.mocha());
 
   });
 

@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * Has wrapper functions for the bcrypt module
+ * Utility module that wraps functions of the bcrypt module
  * @module crypt
  */
 
@@ -16,7 +16,9 @@ exports.hash = function(password) {
 
   return new Promise((resolve, reject) => {
     bcrypt.hash(password, 10, (err, hash) => {
-      if (err) reject(err);
+      if (err) {
+        reject(err);
+      }
       resolve(hash);
     });
   });
@@ -33,7 +35,9 @@ exports.checkPassword = function(requested, stored) {
 
   return new Promise((resolve, reject) => {
     bcrypt.compare(requested, stored, (err, res) => {
-      if (err) reject(err);
+      if (err) {
+        reject(err);
+      }
       resolve(res);
     });
   });

@@ -2,6 +2,7 @@
 
 /**
  * Contains all the functions for direct user manipulation
+ * @namespace users
  * @module usersCtrl
  */
 
