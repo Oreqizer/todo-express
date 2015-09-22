@@ -11,7 +11,7 @@
  * @param   {String} message - brief description of the error
  * @returns {Error}  the created error
  */
-exports.error = function(code, message) {
+module.exports.error = function(code, message) {
   let err = new Error(message);
   err.status = code;
   return err;
@@ -22,7 +22,7 @@ exports.error = function(code, message) {
  * @param   {Object} err - the thrown error
  * @returns {Error}  the same error with additional information
  */
-exports.mongoError = function(err) {
+module.exports.mongoError = function(err) {
 
   err.status = 409;
 

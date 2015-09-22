@@ -2,6 +2,7 @@
 
 /**
  * Contains all the routes for user manipulation
+ * @namespace users
  * @module usersRouter
  */
 

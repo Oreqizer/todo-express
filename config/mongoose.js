@@ -20,6 +20,9 @@ module.exports = function() {
 
   let db = mongoose.connect(config.db);
 
+  // Make Mongoose use the native promises
+  mongoose.Promise = Promise;
+
   // Loads all models
   wrench.readdirSyncRecursive('./app')
   .filter(file => (/\.model\.js$/i).test(file))

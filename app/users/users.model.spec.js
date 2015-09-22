@@ -4,7 +4,7 @@
 let app = require('../../app');
 
 // Load dependencies
-let expect = require('expect.js'),
+let expect = require('chai').expect,
     mongoose = require('mongoose');
 
 // Load models
@@ -13,7 +13,7 @@ let User = mongoose.model('User');
 // Global test variables
 var user;
 
-describe('Unit testing user models:', () => {
+describe('User model:', () => {
 
   beforeEach(() => {
 
@@ -22,79 +22,217 @@ describe('Unit testing user models:', () => {
 
       username: 'test',
       email: 'test@test.com',
-      password: 'heslojeveslo'
+      password: 'heslojeveslo',
+      firstName: 'Test',
+      lastName: 'Subject',
+      webpage: 'google.com'
 
     });
 
   });
 
-  it('should save a new user correctly', (done) => {
+  // Test correct input
+  describe('Valid input and normalization', () => {
 
-    user.save()
-    .then(data => {
-      expect(data).to.be.an('object');
-      expect(data.username).to.be('test');
-      expect(data.password).not.to.be('heslojeveslo');
-      done();
-    }, err => {
-      done(err);
-    });
+    it('should save a new user', (done) => {
 
-  });
-
-  it('should not save a user without username', (done) => {
-
-    user.username = undefined;
-
-    user.save()
-    .then(null, err => {
-      expect(err).to.be.an('object');
-      done();
-    });
-
-  });
-
-  it('should not save a user without email', (done) => {
-
-    user.email = undefined;
-
-    user.save()
-    .then(null, err => {
-      expect(err).to.be.an('object');
-      done();
-    });
-
-  });
-
-  it('should not save a user with short password', (done) => {
-
-    user.password = 'abcde';
-
-    user.save()
-    .then(null, err => {
-      expect(err).to.be.an('object');
-      done();
-    });
-
-  });
-
-  it('should not save a user twice', (done) => {
-
-    user.save()
-    .then(data => {
-      let dup = new User({
-
-        username: 'test',
-        email: 'test@test.com',
-        password: 'heslojeveslo'
-
+      user.save()
+      .then(data => {
+        expect(data).to.be.an('object');
+        expect(data.id).to.be.a('string');
+        expect(data.username).to.equal('test');
+        expect(data.email).to.equal('test@test.com');
+        expect(data.firstName).to.equal('Test');
+        expect(data.lastName).to.equal('Subject');
+        expect(data.webpage).to.equal('google.com');
+        done();
+      })
+      .catch(err => {
+        done(err);
       });
-      return dup.save();
-    })
-    .then(null, err => {
-      expect(err).to.be.an('object');
-      expect(err.code).to.be(11000);
-      done();
+
+    });
+
+    it('should hash the password', (done) => {
+
+      user.save()
+      .then(data => {
+        expect(data.password).not.to.equal('heslojeveslo');
+        done();
+      })
+      .catch(err => {
+        done(err);
+      });
+
+    });
+
+    it('should normalize first name', (done) => {
+
+      user.firstName = 'tEst';
+
+      user.save()
+      .then(data => {
+        expect(data.firstName).to.equal('Test');
+        done();
+      })
+      .catch(err => {
+        done(err);
+      });
+
+    });
+
+    it('should normalize last name', (done) => {
+
+      user.lastName = 'sUBjEcT';
+
+      user.save()
+      .then(data => {
+        expect(data.lastName).to.equal('Subject');
+        done();
+      })
+      .catch(err => {
+        done(err);
+      });
+
+    });
+
+  });
+
+  // Test invalid input
+  describe('Invalid input', () => {
+
+    it('should not save a user without username', (done) => {
+
+      user.username = undefined;
+
+      user.save()
+      .then(data => {
+        done(new Error('should not have saved'));
+      })
+      .catch(err => {
+        expect(err).to.be.an('object');
+        done();
+      });
+
+    });
+
+    it('should not save a user without email', (done) => {
+
+      user.email = undefined;
+
+      user.save()
+      .then(data => {
+        done(new Error('should not have saved'));
+      })
+      .catch(err => {
+        expect(err).to.be.an('object');
+        done();
+      });
+
+    });
+
+    it('should not save a user with short password', (done) => {
+
+      user.password = 'abcde';
+
+      user.save()
+      .then(data => {
+        done(new Error('should not have saved'));
+      })
+      .catch(err => {
+        expect(err).to.be.an('object');
+        done();
+      });
+
+    });
+
+    it('should not save a user with invalid webpage url', (done) => {
+
+      user.webpage = 'google';
+
+      user.save()
+      .then(data => {
+        done(new Error('should not have saved'));
+      })
+      .catch(err => {
+        expect(err).to.be.an('object');
+        done();
+      });
+
+    });
+
+    it('should not save a user with invalid first name', (done) => {
+
+      user.firstName = 't3st';
+
+      user.save()
+      .then(data => {
+        done(new Error('should not have saved'));
+      })
+      .catch(err => {
+        expect(err).to.be.an('object');
+        done();
+      });
+
+    });
+
+    it('should not save a user with invalid last name', (done) => {
+
+      user.lastName = 'subj3ct';
+
+      user.save()
+      .catch(err => {
+        expect(err).to.be.an('object');
+        done();
+      });
+
+    });
+
+  });
+
+  // Test duplicate input
+  describe('Duplicate input', () => {
+
+    it('should not save a user with duplicate username', (done) => {
+
+      user.save()
+      .then(data => {
+        let dup = new User({
+
+          username: 'test',
+          email: 'test5@test.com',
+          password: 'heslojeveslo'
+
+        });
+        return dup.save();
+      })
+      .catch(err => {
+        expect(err).to.be.an('object');
+        expect(err.code).to.equal(11000);
+        done();
+      });
+
+    });
+
+    it('should not save a user with duplicate email', (done) => {
+
+      user.save()
+      .then(data => {
+        let dup = new User({
+
+          username: 'test5',
+          email: 'test@test.com',
+          password: 'heslojeveslo'
+
+        });
+        return dup.save();
+      })
+      .catch(err => {
+        expect(err).to.be.an('object');
+        expect(err.code).to.equal(11000);
+        done();
+      });
+
     });
 
   });
@@ -105,7 +243,8 @@ describe('Unit testing user models:', () => {
     User.remove()
     .then(() => {
       done();
-    }, err => {
+    })
+    .catch(err => {
       done(err);
     });
 

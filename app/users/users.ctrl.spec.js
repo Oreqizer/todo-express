@@ -6,10 +6,9 @@ let app = require('../../app'),
 
 // Load dependencies
 let mongoose = require('mongoose'),
-    expect = require('expect.js'),
+    expect = require('chai').expect,
     request = require('supertest'),
-    jwt = require('jsonwebtoken'),
-    _ = require('lodash');
+    jwt = require('jsonwebtoken');
 
 // Load models
 let User = mongoose.model('User');
@@ -47,7 +46,8 @@ describe('User routes:', () => {
     })
     .then(() => {
       done();
-    }, err => {
+    })
+    .catch(err => {
       done(err);
     });
 
@@ -68,7 +68,7 @@ describe('User routes:', () => {
           }
           expect(res.body).to.be.an('array');
           expect(res.body).to.have.length(2);
-          expect(res.body[0].username).to.be('test');
+          expect(res.body[0].username).to.equal('test');
           done();
         });
 
@@ -85,7 +85,7 @@ describe('User routes:', () => {
             return done(err);
           }
           expect(res.body).to.be.an('object');
-          expect(res.body.username).to.be('test');
+          expect(res.body.username).to.equal('test');
           done();
         });
 
@@ -129,7 +129,7 @@ describe('User routes:', () => {
             return done(err);
           }
           expect(res.body).to.be.an('object');
-          expect(res.body.username).to.be('updated');
+          expect(res.body.username).to.equal('updated');
           done();
         });
 
@@ -252,8 +252,8 @@ describe('User routes:', () => {
             return done(err);
           }
           expect(res.body).to.be.an('object');
-          expect(res.body.username).to.be('test3');
-          expect(res.body.password).not.to.be('heslojeveslo');
+          expect(res.body.username).to.equal('test3');
+          expect(res.body.password).not.to.equal('heslojeveslo');
           done();
         });
 
@@ -276,7 +276,8 @@ describe('User routes:', () => {
     User.remove()
     .then(() => {
       done();
-    }, err => {
+    })
+    .catch(err => {
       done(err);
     });
 

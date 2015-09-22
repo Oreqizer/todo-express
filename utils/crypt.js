@@ -5,6 +5,7 @@
  * @module crypt
  */
 
+// Load dependencies
 let bcrypt = require('bcrypt');
 
 /**
@@ -12,7 +13,7 @@ let bcrypt = require('bcrypt');
  * @param   {String} password - a user's password
  * @returns {Promise} hashed password
  */
-exports.hash = function(password) {
+module.exports.hash = function(password) {
 
   return new Promise((resolve, reject) => {
     bcrypt.hash(password, 10, (err, hash) => {
@@ -31,7 +32,7 @@ exports.hash = function(password) {
  * @param   {String}  stored    - the refference hash
  * @returns {Promise} password equals hash
  */
-exports.checkPassword = function(requested, stored) {
+module.exports.checkPassword = function(requested, stored) {
 
   return new Promise((resolve, reject) => {
     bcrypt.compare(requested, stored, (err, res) => {

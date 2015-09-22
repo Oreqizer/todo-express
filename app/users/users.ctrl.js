@@ -26,12 +26,13 @@ let User = require('mongoose').model('User');
  * @param {Object}   res  - http response object
  * @param {Function} next - invokes next middleware
  */
-exports.findAll = function(req, res, next) {
+module.exports.findAll = function(req, res, next) {
 
   User.find({})
   .then(data => {
     res.json(data);
-  }, err => {
+  })
+  .catch(err => {
     next(e.mongoError(err));
   });
 
@@ -44,7 +45,7 @@ exports.findAll = function(req, res, next) {
  * @param   {Function} next - invokes next middleware
  * @returns {Function} prematurely ends the function if an error occurs
  */
-exports.find = function(req, res, next) {
+module.exports.find = function(req, res, next) {
 
   User.findById(req.params.id)
   .then(user => {
@@ -53,7 +54,8 @@ exports.find = function(req, res, next) {
     }
     res.json(user);
     next();
-  }, err => {
+  })
+  .catch(err => {
     next(e.mongoError(err));
   });
 
@@ -66,7 +68,7 @@ exports.find = function(req, res, next) {
  * @param   {Function} next - invokes next middleware
  * @returns {Function} prematurely ends the function if an error occurs
  */
-exports.update = function(req, res, next) {
+module.exports.update = function(req, res, next) {
 
   User.findByIdAndUpdate(req.params.id, {
     $set: req.body.user
@@ -79,7 +81,8 @@ exports.update = function(req, res, next) {
     }
     res.json(user);
     next();
-  }, err => {
+  })
+  .catch(err => {
     next(e.mongoError(err));
   });
 
@@ -92,7 +95,7 @@ exports.update = function(req, res, next) {
  * @param   {Function} next - invokes next middleware
  * @returns {Function} prematurely ends the function if an error occurs
  */
-exports.delete = function(req, res, next) {
+module.exports.delete = function(req, res, next) {
 
   User.findByIdAndRemove(req.params.id)
   .then(user => {
@@ -101,7 +104,8 @@ exports.delete = function(req, res, next) {
     }
     res.status(204).send('User deleted');
     next();
-  }, err => {
+  })
+  .catch(err => {
     next(e.mongoError(err));
   });
 
@@ -114,7 +118,7 @@ exports.delete = function(req, res, next) {
  * @param   {Function} next - invokes next middleware
  * @returns {Function} prematurely ends the function if an error occurs
  */
-exports.login = function(req, res, next) {
+module.exports.login = function(req, res, next) {
 
   User.findOne({
     // Searches both the username and email
@@ -151,7 +155,7 @@ exports.login = function(req, res, next) {
  * @param   {Function} next - invokes next middleware
  * @returns {Function} prematurely ends the function if an error occurs
  */
-exports.register = function(req, res, next) {
+module.exports.register = function(req, res, next) {
 
   let user = new User(req.body);
 
@@ -159,7 +163,8 @@ exports.register = function(req, res, next) {
   .then(user => {
     res.status(201).send(user);
     next();
-  }, err => {
+  })
+  .catch(err => {
     next(e.mongoError(err));
   });
 
@@ -172,7 +177,7 @@ exports.register = function(req, res, next) {
  * @param   {Function} next - invokes next middleware
  * @returns {Function} prematurely ends the function if an error occurs
  */
-exports.authorize = function(req, res, next) {
+module.exports.authorize = function(req, res, next) {
 
   let token = req.body.token;
   if (!token) {
@@ -202,7 +207,7 @@ exports.authorize = function(req, res, next) {
  * @param   {Function} next - invokes next middleware
  * @returns {Function} prematurely ends the function if an error occurs
  */
-exports.isOwner = function(req, res, next) {
+module.exports.isOwner = function(req, res, next) {
 
   if (req.body.iss !== req.params.id) {
     return next(e.error(401, 'Token and request ID mismatch'));
@@ -218,7 +223,7 @@ exports.isOwner = function(req, res, next) {
  * @param   {Object}   res  - http response object
  * @param   {Function} next - invokes next middleware
  */
-exports.token = function(req, res, next) {
+module.exports.token = function(req, res, next) {
 
   let expires = moment().add(7, 'days').valueOf();
   let token = jwt.sign({

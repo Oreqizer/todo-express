@@ -16,7 +16,7 @@ let config = require('./config/config');
 let db = mongoose(),
     app = express();
 
-// Listen at port 3000
+// Listen at the configured port
 app.listen(config.port);
 
 console.log(`Running '${config.env}' app at port ${config.port}.`);
