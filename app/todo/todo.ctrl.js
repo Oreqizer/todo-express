@@ -7,8 +7,7 @@
  */
 
 // Load modules
-let config = require('../../config/config'),
-    e = require('../../utils/error');
+let e = require('../../utils/error');
 
 // Load models
 let Todo = require('mongoose').model('Todo');

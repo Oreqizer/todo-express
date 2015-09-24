@@ -51,7 +51,7 @@ describe('Todo model:', () => {
         expect(data).to.be.an('object');
         expect(data.title).to.equal('Test');
         expect(data.content).to.equal('Test TODO');
-        expect(data.done).to.be.false;
+        expect(data.done).to.equal(false);
         expect(data.importance).to.equal('neutral');
         expect(data.created).to.be.a('date');
         done();
