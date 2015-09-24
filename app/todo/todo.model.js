@@ -7,9 +7,7 @@
  */
 
 // Load dependencies
-let mongoose = require('mongoose'),
-    v = require('validator'),
-    _ = require('lodash');
+let mongoose = require('mongoose');
 
 // Load module builder
 let Schema = mongoose.Schema;
@@ -23,8 +21,9 @@ let TodoSchema = new Schema({
   title: {type: String, required: true, index: true},
   content: {type: String},
   importance: {type: String, enum: ['weak', 'neutral', 'strong'], default: 'neutral'},
+  done: {type: Boolean, default: false},
   created: {type: Date, default: Date.now},
-  _owner: {type: Schema.ObjectId, ref: 'User', index: true}
+  _owner: {type: String, ref: 'User', index: true}
 
 });
 

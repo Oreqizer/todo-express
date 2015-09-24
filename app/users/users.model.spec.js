@@ -1,7 +1,7 @@
 'use strict';
 
 // Load modules
-let app = require('../../app');
+require('../../app');
 
 // Load dependencies
 let expect = require('chai').expect,
@@ -34,7 +34,7 @@ describe('User model:', () => {
   // Test correct input
   describe('Valid input and normalization', () => {
 
-    it('should save a new user', (done) => {
+    it('should save a new user', done => {
 
       user.save()
       .then(data => {
@@ -53,7 +53,7 @@ describe('User model:', () => {
 
     });
 
-    it('should hash the password', (done) => {
+    it('should hash the password', done => {
 
       user.save()
       .then(data => {
@@ -66,7 +66,7 @@ describe('User model:', () => {
 
     });
 
-    it('should normalize first name', (done) => {
+    it('should normalize first name', done => {
 
       user.firstName = 'tEst';
 
@@ -81,7 +81,7 @@ describe('User model:', () => {
 
     });
 
-    it('should normalize last name', (done) => {
+    it('should normalize last name', done => {
 
       user.lastName = 'sUBjEcT';
 
@@ -101,12 +101,12 @@ describe('User model:', () => {
   // Test invalid input
   describe('Invalid input', () => {
 
-    it('should not save a user without username', (done) => {
+    it('should not save a user without username', done => {
 
       user.username = undefined;
 
       user.save()
-      .then(data => {
+      .then(() => {
         done(new Error('should not have saved'));
       })
       .catch(err => {
@@ -116,12 +116,12 @@ describe('User model:', () => {
 
     });
 
-    it('should not save a user without email', (done) => {
+    it('should not save a user without email', done => {
 
       user.email = undefined;
 
       user.save()
-      .then(data => {
+      .then(() => {
         done(new Error('should not have saved'));
       })
       .catch(err => {
@@ -131,12 +131,12 @@ describe('User model:', () => {
 
     });
 
-    it('should not save a user with short password', (done) => {
+    it('should not save a user with short password', done => {
 
       user.password = 'abcde';
 
       user.save()
-      .then(data => {
+      .then(() => {
         done(new Error('should not have saved'));
       })
       .catch(err => {
@@ -146,12 +146,12 @@ describe('User model:', () => {
 
     });
 
-    it('should not save a user with invalid webpage url', (done) => {
+    it('should not save a user with invalid webpage url', done => {
 
       user.webpage = 'google';
 
       user.save()
-      .then(data => {
+      .then(() => {
         done(new Error('should not have saved'));
       })
       .catch(err => {
@@ -161,12 +161,12 @@ describe('User model:', () => {
 
     });
 
-    it('should not save a user with invalid first name', (done) => {
+    it('should not save a user with invalid first name', done => {
 
       user.firstName = 't3st';
 
       user.save()
-      .then(data => {
+      .then(() => {
         done(new Error('should not have saved'));
       })
       .catch(err => {
@@ -176,7 +176,7 @@ describe('User model:', () => {
 
     });
 
-    it('should not save a user with invalid last name', (done) => {
+    it('should not save a user with invalid last name', done => {
 
       user.lastName = 'subj3ct';
 
@@ -193,10 +193,10 @@ describe('User model:', () => {
   // Test duplicate input
   describe('Duplicate input', () => {
 
-    it('should not save a user with duplicate username', (done) => {
+    it('should not save a user with duplicate username', done => {
 
       user.save()
-      .then(data => {
+      .then(() => {
         let dup = new User({
 
           username: 'test',
@@ -214,10 +214,10 @@ describe('User model:', () => {
 
     });
 
-    it('should not save a user with duplicate email', (done) => {
+    it('should not save a user with duplicate email', done => {
 
       user.save()
-      .then(data => {
+      .then(() => {
         let dup = new User({
 
           username: 'test5',

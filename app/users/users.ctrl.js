@@ -13,9 +13,7 @@ let config = require('../../config/config'),
 
 // Load dependencies
 let jwt = require('jsonwebtoken'),
-    moment = require('moment'),
-    v = require('validator'),
-    _ = require('lodash');
+    moment = require('moment');
 
 // Load models
 let User = require('mongoose').model('User');
@@ -28,9 +26,10 @@ let User = require('mongoose').model('User');
  */
 module.exports.findAll = function(req, res, next) {
 
-  User.find({})
+  User.find()
   .then(data => {
     res.json(data);
+    next();
   })
   .catch(err => {
     next(e.mongoError(err));

@@ -14,11 +14,17 @@ let mongoose = require('mongoose'),
 let User = mongoose.model('User');
 
 // Global test variables
-var user, user2, token;
+var user, user2, token, mock;
 
 describe('User routes:', () => {
 
-  beforeEach((done) => {
+  before(() => {
+
+    mock = mongoose.Types.ObjectId();
+
+  });
+
+  beforeEach(done => {
 
     // Create new 'User' model instances
     user = new User({
@@ -56,7 +62,7 @@ describe('User routes:', () => {
   // Test retrieval routes
   describe('GET /users/', () => {
 
-    it('should return all users', (done) => {
+    it('should return all users', done => {
 
       request(app)
         .get('/api/users')
@@ -74,7 +80,7 @@ describe('User routes:', () => {
 
     });
 
-    it('should return a user by id', (done) => {
+    it('should return a user by id', done => {
 
       request(app)
         .get(`/api/users/${user._id}`)
@@ -91,15 +97,15 @@ describe('User routes:', () => {
 
     });
 
-    it('should respond with a 404 - user not found', (done) => {
+    it('should respond with a 404 - user not found', done => {
 
       request(app)
-        .get('/api/users/aaaaaaaabbbbbbbbcccccccc')
+        .get(`/api/users/${mock}`)
         .expect(404, done);
 
     });
 
-    it('should respond with a 409 - conflict', (done) => {
+    it('should respond with a 409 - conflict', done => {
 
       request(app)
         .get('/api/users/randomuser')
@@ -112,12 +118,12 @@ describe('User routes:', () => {
   // Test the update route
   describe('PUT /users/:id', () => {
 
-    it('should update a user info', (done) => {
+    it('should update a user info', done => {
 
       request(app)
         .put(`/api/users/${user._id}`)
         .send({
-          token: token,
+          token,
           user: {
             username: 'updated'
           }
@@ -135,7 +141,7 @@ describe('User routes:', () => {
 
     });
 
-    it('should respond with a 401 - wrong user', (done) => {
+    it('should respond with a 401 - wrong user', done => {
 
       request(app)
         .put(`/api/users/${user2._id}`)
@@ -149,7 +155,7 @@ describe('User routes:', () => {
 
     });
 
-    it('should respond with a 401 - no token found', (done) => {
+    it('should respond with a 401 - no token found', done => {
 
       request(app)
         .put(`/api/users/${user._id}`)
@@ -162,7 +168,7 @@ describe('User routes:', () => {
   // Test deleting route
   describe('DELETE /users/:id', () => {
 
-    it('should delete the user', (done) => {
+    it('should delete the user', done => {
 
       request(app)
         .delete(`/api/users/${user._id}`)
@@ -173,7 +179,7 @@ describe('User routes:', () => {
 
     });
 
-    it('should respond with a 401 - wrong user', (done) => {
+    it('should respond with a 401 - wrong user', done => {
 
       request(app)
         .delete(`/api/users/${user2._id}`)
@@ -184,7 +190,7 @@ describe('User routes:', () => {
 
     });
 
-    it('should respond with a 401 - no token found', (done) => {
+    it('should respond with a 401 - no token found', done => {
 
       request(app)
         .delete(`/api/users/${user._id}`)
@@ -197,7 +203,7 @@ describe('User routes:', () => {
   // Test the login route
   describe('POST /login', () => {
 
-    it('should respond with a JWT token', (done) => {
+    it('should respond with a JWT token', done => {
 
       request(app)
         .post('/api/login')
@@ -217,7 +223,7 @@ describe('User routes:', () => {
 
     });
 
-    it('should respond with a 404 - user not found', (done) => {
+    it('should respond with a 404 - user not found', done => {
 
       request(app)
         .post('/api/login')
@@ -226,7 +232,7 @@ describe('User routes:', () => {
 
     });
 
-    it('should respond with a 401 - wrong password', (done) => {
+    it('should respond with a 401 - wrong password', done => {
 
       request(app)
         .post('/api/login')
@@ -240,7 +246,7 @@ describe('User routes:', () => {
   // Test the register route
   describe('POST /register', () => {
 
-    it('should register a new user', (done) => {
+    it('should register a new user', done => {
 
       request(app)
         .post('/api/register')
@@ -259,7 +265,7 @@ describe('User routes:', () => {
 
     });
 
-    it('should resond with a 409', (done) => {
+    it('should resond with a 409 - conflict', done => {
 
       request(app)
         .post('/api/register')

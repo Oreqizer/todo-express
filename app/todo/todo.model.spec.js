@@ -1,7 +1,7 @@
 'use strict';
 
 // Load modules
-let app = require('../../app');
+require('../../app');
 
 // Load dependencies
 let expect = require('chai').expect,
@@ -51,6 +51,7 @@ describe('Todo model:', () => {
         expect(data).to.be.an('object');
         expect(data.title).to.equal('Test');
         expect(data.content).to.equal('Test TODO');
+        expect(data.done).to.be.false;
         expect(data.importance).to.equal('neutral');
         expect(data.created).to.be.a('date');
         done();
@@ -65,8 +66,8 @@ describe('Todo model:', () => {
 
       todo.save()
       .then(data => {
-        expect(data._owner).to.be.an('object');
-        expect(data._owner.toString()).to.equal(user.id);
+        expect(data._owner).to.be.a('string');
+        expect(data._owner).to.equal(user.id);
         done();
       })
       .catch(err => {
@@ -84,7 +85,7 @@ describe('Todo model:', () => {
       todo.title = null;
 
       todo.save()
-      .then(data => {
+      .then(() => {
         done(new Error('should not have saved'));
       })
       .catch(err => {
@@ -99,7 +100,7 @@ describe('Todo model:', () => {
       todo.importance = 'trash';
 
       todo.save()
-      .then(data => {
+      .then(() => {
         done(new Error('should not have saved'));
       })
       .catch(err => {
