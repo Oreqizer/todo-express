@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * Contains all the functions for direct user manipulation
+ * Contains all the functions for direct todo manipulation
  * @namespace todo
  * @module todoCtrl
  */
