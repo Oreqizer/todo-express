@@ -21,10 +21,10 @@ module.exports = function(app) {
   // Find all users
   router.get('/users', users.findAll);
 
-  // Find user by ID: search, update or delete
+  // Find user by ID: search, update or remove
   router.get('/users/:id', users.find);
   router.put('/users/:id', users.authorize, users.isOwner, users.update);
-  router.delete('/users/:id', users.authorize, users.isOwner, users.delete);
+  router.delete('/users/:id', users.authorize, users.isOwner, users.remove);
 
   // Login the requested user
   router.post('/login', users.login, users.token);

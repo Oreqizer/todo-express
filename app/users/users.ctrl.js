@@ -94,7 +94,7 @@ module.exports.update = function(req, res, next) {
  * @param   {Function} next - invokes next middleware
  * @returns {Function} prematurely ends the function if an error occurs
  */
-module.exports.delete = function(req, res, next) {
+module.exports.remove = function(req, res, next) {
 
   User.findByIdAndRemove(req.params.id)
   .then(user => {

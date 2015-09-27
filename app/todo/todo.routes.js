@@ -26,9 +26,9 @@ module.exports = function(app) {
   router.get('/todos', todo.findAll);
   router.get('/todos/:id', todo.getTodo, todo.find);
 
-  // Find todo by ID: update or delete
+  // Find todo by ID: update or remove
   router.put('/todos/:id', todo.getTodo, todo.update);
-  router.delete('/todos/:id', todo.getTodo, todo.delete);
+  router.delete('/todos/:id', todo.getTodo, todo.remove);
 
   // Post a new todo
   router.post('/todos', todo.post);

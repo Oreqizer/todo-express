@@ -246,7 +246,7 @@ describe('Todo routes:', () => {
     it('should respond with a 401 - unauthorized', done => {
 
       request(app)
-        .put(`/api/todos/${todo.id}`)
+        .delete(`/api/todos/${todo.id}`)
         .send({token: mock.token})
         .expect(401, done);
 
@@ -255,7 +255,7 @@ describe('Todo routes:', () => {
     it('should respond with a 404 - todo not found', done => {
 
       request(app)
-        .put(`/api/todos/${mock.id}`)
+        .delete(`/api/todos/${mock.id}`)
         .send({token: client.token})
         .expect(404, done);
 

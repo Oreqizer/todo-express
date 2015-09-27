@@ -12,13 +12,23 @@ let e = require('../../utils/error');
 // Load models
 let Todo = require('mongoose').model('Todo');
 
+module.exports = {
+  findAll,
+  find,
+  update,
+  remove,
+  post,
+  getTodo
+};
+
 /**
  * [Middleware] Finds all todos of a user
+ * @module todoCtrl
  * @param {Object}   req  - http request object
  * @param {Object}   res  - http response object
  * @param {Function} next - invokes next middleware
  */
-module.exports.findAll = function(req, res, next) {
+function findAll(req, res, next) {
 
   Todo.find({
     _owner: req.body.iss
@@ -31,15 +41,16 @@ module.exports.findAll = function(req, res, next) {
     next(e.mongoError(err));
   });
 
-};
+}
 
 /**
  * [Middleware] Returns a todo
+ * @module todoCtrl
  * @param {Object}   req  - http request object
  * @param {Object}   res  - http response object
  * @param {Function} next - invokes next middleware
  */
-module.exports.find = function(req, res, next) {
+function find(req, res, next) {
 
   Todo.findById(req.params.id)
   .then(todo => {
@@ -50,20 +61,21 @@ module.exports.find = function(req, res, next) {
     next(e.mongoError(err));
   });
 
-};
+}
 
 /**
  * [Middleware] Updates a todo
+ * @module todoCtrl
  * @param {Object}   req  - http request object
  * @param {Object}   res  - http response object
  * @param {Function} next - invokes next middleware
  */
-module.exports.update = function(req, res, next) {
+function update(req, res, next) {
 
   Todo.findByIdAndUpdate(req.params.id, {
     $set: req.body.todo
   }, {
-    new: true
+    'new': true
   })
   .then(todo => {
     res.json(todo);
@@ -73,15 +85,16 @@ module.exports.update = function(req, res, next) {
     next(e.mongoError(err));
   });
 
-};
+}
 
 /**
  * [Middleware] Deletes a todo
+ * @module todoCtrl
  * @param {Object}   req  - http request object
  * @param {Object}   res  - http response object
  * @param {Function} next - invokes next middleware
  */
-module.exports.delete = function(req, res, next) {
+function remove(req, res, next) {
 
   Todo.findByIdAndRemove(req.params.id)
   .then(() => {
@@ -92,15 +105,16 @@ module.exports.delete = function(req, res, next) {
     next(e.mongoError(err));
   });
 
-};
+}
 
 /**
  * [Middleware] Posts a new todo
+ * @module todoCtrl
  * @param {Object}   req  - http request object
  * @param {Object}   res  - http response object
  * @param {Function} next - invokes next middleware
  */
-module.exports.post = function(req, res, next) {
+function post(req, res, next) {
 
   let todo = new Todo(req.body.todo);
 
@@ -113,16 +127,17 @@ module.exports.post = function(req, res, next) {
     next(e.mongoError(err));
   });
 
-};
+}
 
 /**
  * [Middleware] Gets the requested todo and checks if it belongs to the user
+ * @module todoCtrl
  * @param {Object}   req  - http request object
  * @param {Object}   res  - http response object
  * @param {Function} next - invokes next middleware
  * @returns {Function} prematurely ends the function if an error occurs
  */
-module.exports.getTodo = function(req, res, next) {
+function getTodo(req, res, next) {
 
   Todo.findById(req.params.id)
   .then(todo => {
@@ -138,4 +153,4 @@ module.exports.getTodo = function(req, res, next) {
     next(e.mongoError(err));
   });
 
-};
+}
