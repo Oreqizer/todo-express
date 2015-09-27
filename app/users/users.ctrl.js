@@ -18,25 +18,13 @@ let jwt = require('jsonwebtoken'),
 // Load models
 let User = require('mongoose').model('User');
 
-module.exports = {
-  findAll,
-  find,
-  update,
-  remove,
-  login,
-  register,
-  authorize,
-  isOwner,
-  getToken
-};
-
 /**
  * [Middleware] Finds all users in the database
  * @param {Object}   req  - http request object
  * @param {Object}   res  - http response object
  * @param {Function} next - invokes next middleware
  */
-function findAll(req, res, next) {
+module.exports.findAll = function(req, res, next) {
 
   User.find()
   .then(data => {
@@ -47,7 +35,7 @@ function findAll(req, res, next) {
     next(e.mongoError(err));
   });
 
-}
+};
 
 /**
  * [Middleware] Returns a user by ID
@@ -56,7 +44,7 @@ function findAll(req, res, next) {
  * @param   {Function} next - invokes next middleware
  * @returns {Function} prematurely ends the function if an error occurs
  */
-function find(req, res, next) {
+module.exports.find = function(req, res, next) {
 
   User.findById(req.params.id)
   .then(user => {
@@ -70,7 +58,7 @@ function find(req, res, next) {
     next(e.mongoError(err));
   });
 
-}
+};
 
 /**
  * [Middleware] Updated the user info
@@ -79,7 +67,7 @@ function find(req, res, next) {
  * @param   {Function} next - invokes next middleware
  * @returns {Function} prematurely ends the function if an error occurs
  */
-function update(req, res, next) {
+module.exports.update = function(req, res, next) {
 
   User.findByIdAndUpdate(req.params.id, {
     $set: req.body.user
@@ -97,7 +85,7 @@ function update(req, res, next) {
     next(e.mongoError(err));
   });
 
-}
+};
 
 /**
  * [Middleware] Deletes a user
@@ -106,7 +94,7 @@ function update(req, res, next) {
  * @param   {Function} next - invokes next middleware
  * @returns {Function} prematurely ends the function if an error occurs
  */
-function remove(req, res, next) {
+module.exports.remove = function(req, res, next) {
 
   User.findByIdAndRemove(req.params.id)
   .then(user => {
@@ -120,7 +108,7 @@ function remove(req, res, next) {
     next(e.mongoError(err));
   });
 
-}
+};
 
 /**
  * [Middleware] Logs in a user
@@ -129,7 +117,7 @@ function remove(req, res, next) {
  * @param   {Function} next - invokes next middleware
  * @returns {Function} prematurely ends the function if an error occurs
  */
-function login(req, res, next) {
+module.exports.login = function(req, res, next) {
 
   User.findOne({
     // Searches both the username and email
@@ -157,7 +145,7 @@ function login(req, res, next) {
     next(err);
   });
 
-}
+};
 
 /**
  * [Middleware] Registers a new user
@@ -166,7 +154,7 @@ function login(req, res, next) {
  * @param   {Function} next - invokes next middleware
  * @returns {Function} prematurely ends the function if an error occurs
  */
-function register(req, res, next) {
+module.exports.register = function(req, res, next) {
 
   let user = new User(req.body);
 
@@ -179,7 +167,7 @@ function register(req, res, next) {
     next(e.mongoError(err));
   });
 
-}
+};
 
 /**
  * [Middleware] Checks incoming request's token
@@ -188,7 +176,7 @@ function register(req, res, next) {
  * @param   {Function} next - invokes next middleware
  * @returns {Function} prematurely ends the function if an error occurs
  */
-function authorize(req, res, next) {
+module.exports.authorize = function(req, res, next) {
 
   let token = req.body.token;
   if (!token) {
@@ -209,7 +197,7 @@ function authorize(req, res, next) {
 
   next();
 
-}
+};
 
 /**
  * [Middleware] Checks if the token's ID matches request ID
@@ -218,7 +206,7 @@ function authorize(req, res, next) {
  * @param   {Function} next - invokes next middleware
  * @returns {Function} prematurely ends the function if an error occurs
  */
-function isOwner(req, res, next) {
+module.exports.isOwner = function(req, res, next) {
 
   if (req.body.iss !== req.params.id) {
     return next(e.error(401, 'Token and request ID mismatch'));
@@ -226,7 +214,7 @@ function isOwner(req, res, next) {
 
   next();
 
-}
+};
 
 /**
  * [Middleware] Returns a valid JWT token
@@ -234,7 +222,7 @@ function isOwner(req, res, next) {
  * @param   {Object}   res  - http response object
  * @param   {Function} next - invokes next middleware
  */
-function getToken(req, res, next) {
+module.exports.token = function(req, res, next) {
 
   let expires = moment().add(7, 'days').valueOf();
   let token = jwt.sign({
@@ -250,4 +238,4 @@ function getToken(req, res, next) {
 
   next();
 
-}
+};

@@ -27,7 +27,7 @@ module.exports = function(app) {
   router.delete('/users/:id', users.authorize, users.isOwner, users.remove);
 
   // Login the requested user
-  router.post('/login', users.login, users.getToken);
+  router.post('/login', users.login, users.token);
 
   // Register a new user
   router.post('/register', users.register);
