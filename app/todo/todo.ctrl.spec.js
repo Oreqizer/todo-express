@@ -66,15 +66,15 @@ describe('Todo routes:', () => {
     });
 
     todo.save()
-      .then(() => {
-        return todo2.save();
-      })
-      .then(() => {
-        done();
-      })
-      .catch(err => {
-        done(err);
-      });
+    .then(() => {
+      return todo2.save();
+    })
+    .then(() => {
+      done();
+    })
+    .catch(err => {
+      done(err);
+    });
 
   });
 
@@ -263,12 +263,12 @@ describe('Todo routes:', () => {
   afterEach(done => {
 
     Todo.remove()
-      .then(() => {
-        done();
-      })
-      .catch(err => {
-        done(err);
-      });
+    .then(() => {
+      done();
+    })
+    .catch(err => {
+      done(err);
+    });
 
   });
 
