@@ -47,11 +47,12 @@ module.exports = function() {
   app.set('views', './app/views');
 
   // Loads all routers
-  wrench.readdirSyncRecursive('./app')
-  .filter(file => (/\.routes\.js$/i).test(file))
-  .map(file => {
-    require(`../app/${file}`)(app);
-  });
+  wrench
+    .readdirSyncRecursive('./app')
+    .filter(file => (/\.routes\.js$/i).test(file))
+    .map(file => {
+      require(`../app/${file}`)(app);
+    });
 
   app.use(express.static('./public'));
 

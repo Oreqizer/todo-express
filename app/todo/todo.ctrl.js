@@ -60,18 +60,19 @@ module.exports.find = function(req, res, next) {
  */
 module.exports.update = function(req, res, next) {
 
-  Todo.findByIdAndUpdate(req.params.id, {
-    $set: req.body.todo
-  }, {
-    new: true
-  })
-  .then(todo => {
-    res.json(todo);
-    next();
-  })
-  .catch(err => {
-    next(e.mongoError(err));
-  });
+  Todo
+    .findByIdAndUpdate(req.params.id, {
+      $set: req.body.todo
+    }, {
+      new: true
+    })
+    .then(todo => {
+      res.json(todo);
+      next();
+    })
+    .catch(err => {
+      next(e.mongoError(err));
+    });
 
 };
 
@@ -83,14 +84,15 @@ module.exports.update = function(req, res, next) {
  */
 module.exports.remove = function(req, res, next) {
 
-  Todo.findByIdAndRemove(req.params.id)
-  .then(() => {
-    res.status(204).send('Todo deleted');
-    next();
-  })
-  .catch(err => {
-    next(e.mongoError(err));
-  });
+  Todo
+    .findByIdAndRemove(req.params.id)
+    .then(() => {
+      res.status(204).send('Todo deleted');
+      next();
+    })
+    .catch(err => {
+      next(e.mongoError(err));
+    });
 
 };
 
@@ -104,14 +106,15 @@ module.exports.post = function(req, res, next) {
 
   let todo = new Todo(req.body.todo);
 
-  todo.save()
-  .then(data => {
-    res.status(201).send(data);
-    next();
-  })
-  .catch(err => {
-    next(e.mongoError(err));
-  });
+  todo
+    .save()
+    .then(data => {
+      res.status(201).send(data);
+      next();
+    })
+    .catch(err => {
+      next(e.mongoError(err));
+    });
 
 };
 
@@ -124,18 +127,19 @@ module.exports.post = function(req, res, next) {
  */
 module.exports.getTodo = function(req, res, next) {
 
-  Todo.findById(req.params.id)
-  .then(todo => {
-    if (!todo) {
-      return next(e.error(404, 'Todo not found'));
-    }
-    if (req.body.iss !== todo._owner) {
-      return next(e.error(401, 'Todo does not belong to user'));
-    }
-    next();
-  })
-  .catch(err => {
-    next(e.mongoError(err));
-  });
+  Todo
+    .findById(req.params.id)
+    .then(todo => {
+      if (!todo) {
+        return next(e.error(404, 'Todo not found'));
+      }
+      if (req.body.iss !== todo._owner) {
+        return next(e.error(401, 'Todo does not belong to user'));
+      }
+      next();
+    })
+    .catch(err => {
+      next(e.mongoError(err));
+    });
 
 };

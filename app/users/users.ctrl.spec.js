@@ -49,19 +49,20 @@ describe('User routes:', () => {
 
     });
 
-    user.save()
-    .then(() => {
-      token = jwt.sign({
-        iss: user.id
-      }, config.secret);
-      return user2.save();
-    })
-    .then(() => {
-      done();
-    })
-    .catch(err => {
-      done(err);
-    });
+    user
+      .save()
+      .then(() => {
+        token = jwt.sign({
+          iss: user.id
+        }, config.secret);
+        return user2.save();
+      })
+      .then(() => {
+        done();
+      })
+      .catch(err => {
+        done(err);
+      });
 
   });
 
@@ -261,13 +262,14 @@ describe('User routes:', () => {
   // Database cleanup
   afterEach(done => {
 
-    User.remove()
-    .then(() => {
-      done();
-    })
-    .catch(err => {
-      done(err);
-    });
+    User
+      .remove()
+      .then(() => {
+        done();
+      })
+      .catch(err => {
+        done(err);
+      });
 
   });
 

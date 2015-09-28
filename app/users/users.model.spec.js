@@ -36,33 +36,35 @@ describe('User model:', () => {
 
     it('should save a new user', done => {
 
-      user.save()
-      .then(data => {
-        expect(data).to.be.an('object');
-        expect(data.id).to.be.a('string');
-        expect(data.username).to.equal('test');
-        expect(data.email).to.equal('test@test.com');
-        expect(data.firstName).to.equal('Test');
-        expect(data.lastName).to.equal('Subject');
-        expect(data.webpage).to.equal('google.com');
-        done();
-      })
-      .catch(err => {
-        done(err);
-      });
+      user
+        .save()
+        .then(data => {
+          expect(data).to.be.an('object');
+          expect(data.id).to.be.a('string');
+          expect(data.username).to.equal('test');
+          expect(data.email).to.equal('test@test.com');
+          expect(data.firstName).to.equal('Test');
+          expect(data.lastName).to.equal('Subject');
+          expect(data.webpage).to.equal('google.com');
+          done();
+        })
+        .catch(err => {
+          done(err);
+        });
 
     });
 
     it('should hash the password', done => {
 
-      user.save()
-      .then(data => {
-        expect(data.password).not.to.equal('heslojeveslo');
-        done();
-      })
-      .catch(err => {
-        done(err);
-      });
+      user
+        .save()
+        .then(data => {
+          expect(data.password).not.to.equal('heslojeveslo');
+          done();
+        })
+        .catch(err => {
+          done(err);
+        });
 
     });
 
@@ -70,14 +72,15 @@ describe('User model:', () => {
 
       user.firstName = 'tEst';
 
-      user.save()
-      .then(data => {
-        expect(data.firstName).to.equal('Test');
-        done();
-      })
-      .catch(err => {
-        done(err);
-      });
+      user
+        .save()
+        .then(data => {
+          expect(data.firstName).to.equal('Test');
+          done();
+        })
+        .catch(err => {
+          done(err);
+        });
 
     });
 
@@ -85,14 +88,15 @@ describe('User model:', () => {
 
       user.lastName = 'sUBjEcT';
 
-      user.save()
-      .then(data => {
-        expect(data.lastName).to.equal('Subject');
-        done();
-      })
-      .catch(err => {
-        done(err);
-      });
+      user
+        .save()
+        .then(data => {
+          expect(data.lastName).to.equal('Subject');
+          done();
+        })
+        .catch(err => {
+          done(err);
+        });
 
     });
 
@@ -105,14 +109,15 @@ describe('User model:', () => {
 
       user.username = undefined;
 
-      user.save()
-      .then(() => {
-        done(new Error('should not have saved'));
-      })
-      .catch(err => {
-        expect(err).to.be.an('object');
-        done();
-      });
+      user
+        .save()
+        .then(() => {
+          done(new Error('should not have saved'));
+        })
+        .catch(err => {
+          expect(err).to.be.an('object');
+          done();
+        });
 
     });
 
@@ -120,14 +125,15 @@ describe('User model:', () => {
 
       user.email = undefined;
 
-      user.save()
-      .then(() => {
-        done(new Error('should not have saved'));
-      })
-      .catch(err => {
-        expect(err).to.be.an('object');
-        done();
-      });
+      user
+        .save()
+        .then(() => {
+          done(new Error('should not have saved'));
+        })
+        .catch(err => {
+          expect(err).to.be.an('object');
+          done();
+        });
 
     });
 
@@ -135,14 +141,15 @@ describe('User model:', () => {
 
       user.password = 'abcde';
 
-      user.save()
-      .then(() => {
-        done(new Error('should not have saved'));
-      })
-      .catch(err => {
-        expect(err).to.be.an('object');
-        done();
-      });
+      user
+        .save()
+        .then(() => {
+          done(new Error('should not have saved'));
+        })
+        .catch(err => {
+          expect(err).to.be.an('object');
+          done();
+        });
 
     });
 
@@ -150,14 +157,15 @@ describe('User model:', () => {
 
       user.webpage = 'google';
 
-      user.save()
-      .then(() => {
-        done(new Error('should not have saved'));
-      })
-      .catch(err => {
-        expect(err).to.be.an('object');
-        done();
-      });
+      user
+        .save()
+        .then(() => {
+          done(new Error('should not have saved'));
+        })
+        .catch(err => {
+          expect(err).to.be.an('object');
+          done();
+        });
 
     });
 
@@ -165,14 +173,15 @@ describe('User model:', () => {
 
       user.firstName = 't3st';
 
-      user.save()
-      .then(() => {
-        done(new Error('should not have saved'));
-      })
-      .catch(err => {
-        expect(err).to.be.an('object');
-        done();
-      });
+      user
+        .save()
+        .then(() => {
+          done(new Error('should not have saved'));
+        })
+        .catch(err => {
+          expect(err).to.be.an('object');
+          done();
+        });
 
     });
 
@@ -180,11 +189,12 @@ describe('User model:', () => {
 
       user.lastName = 'subj3ct';
 
-      user.save()
-      .catch(err => {
-        expect(err).to.be.an('object');
-        done();
-      });
+      user
+        .save()
+        .catch(err => {
+          expect(err).to.be.an('object');
+          done();
+        });
 
     });
 
@@ -195,43 +205,45 @@ describe('User model:', () => {
 
     it('should not save a user with duplicate username', done => {
 
-      user.save()
-      .then(() => {
-        let dup = new User({
+      user
+        .save()
+        .then(() => {
+          let dup = new User({
 
-          username: 'test',
-          email: 'test5@test.com',
-          password: 'heslojeveslo'
+            username: 'test',
+            email: 'test5@test.com',
+            password: 'heslojeveslo'
 
+          });
+          return dup.save();
+        })
+        .catch(err => {
+          expect(err).to.be.an('object');
+          expect(err.code).to.equal(11000);
+          done();
         });
-        return dup.save();
-      })
-      .catch(err => {
-        expect(err).to.be.an('object');
-        expect(err.code).to.equal(11000);
-        done();
-      });
 
     });
 
     it('should not save a user with duplicate email', done => {
 
-      user.save()
-      .then(() => {
-        let dup = new User({
+      user
+        .save()
+        .then(() => {
+          let dup = new User({
 
-          username: 'test5',
-          email: 'test@test.com',
-          password: 'heslojeveslo'
+            username: 'test5',
+            email: 'test@test.com',
+            password: 'heslojeveslo'
 
+          });
+          return dup.save();
+        })
+        .catch(err => {
+          expect(err).to.be.an('object');
+          expect(err.code).to.equal(11000);
+          done();
         });
-        return dup.save();
-      })
-      .catch(err => {
-        expect(err).to.be.an('object');
-        expect(err.code).to.equal(11000);
-        done();
-      });
 
     });
 
@@ -240,13 +252,14 @@ describe('User model:', () => {
   // Database cleanup
   afterEach(done => {
 
-    User.remove()
-    .then(() => {
-      done();
-    })
-    .catch(err => {
-      done(err);
-    });
+    User
+      .remove()
+      .then(() => {
+        done();
+      })
+      .catch(err => {
+        done(err);
+      });
 
   });
 

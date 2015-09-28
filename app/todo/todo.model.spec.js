@@ -46,33 +46,35 @@ describe('Todo model:', () => {
 
     it('should save the todo', done => {
 
-      todo.save()
-      .then(data => {
-        expect(data).to.be.an('object');
-        expect(data.title).to.equal('Test');
-        expect(data.content).to.equal('Test TODO');
-        expect(data.done).to.equal(false);
-        expect(data.importance).to.equal('neutral');
-        expect(data.created).to.be.a('date');
-        done();
-      })
-      .catch(err => {
-        done(err);
-      });
+      todo
+        .save()
+        .then(data => {
+          expect(data).to.be.an('object');
+          expect(data.title).to.equal('Test');
+          expect(data.content).to.equal('Test TODO');
+          expect(data.done).to.equal(false);
+          expect(data.importance).to.equal('neutral');
+          expect(data.created).to.be.a('date');
+          done();
+        })
+        .catch(err => {
+          done(err);
+        });
 
     });
 
     it('should save reference to the creator', done => {
 
-      todo.save()
-      .then(data => {
-        expect(data._owner).to.be.a('string');
-        expect(data._owner).to.equal(user.id);
-        done();
-      })
-      .catch(err => {
-        done(err);
-      });
+      todo
+        .save()
+        .then(data => {
+          expect(data._owner).to.be.a('string');
+          expect(data._owner).to.equal(user.id);
+          done();
+        })
+        .catch(err => {
+          done(err);
+        });
 
     });
 
@@ -84,14 +86,15 @@ describe('Todo model:', () => {
 
       todo.title = null;
 
-      todo.save()
-      .then(() => {
-        done(new Error('should not have saved'));
-      })
-      .catch(err => {
-        expect(err).to.be.an('object');
-        done();
-      });
+      todo
+        .save()
+        .then(() => {
+          done(new Error('should not have saved'));
+        })
+        .catch(err => {
+          expect(err).to.be.an('object');
+          done();
+        });
 
     });
 
@@ -99,14 +102,15 @@ describe('Todo model:', () => {
 
       todo.importance = 'trash';
 
-      todo.save()
-      .then(() => {
-        done(new Error('should not have saved'));
-      })
-      .catch(err => {
-        expect(err).to.be.an('object');
-        done();
-      });
+      todo
+        .save()
+        .then(() => {
+          done(new Error('should not have saved'));
+        })
+        .catch(err => {
+          expect(err).to.be.an('object');
+          done();
+        });
 
     });
 
@@ -115,13 +119,14 @@ describe('Todo model:', () => {
   // Database cleanup
   afterEach(done => {
 
-    Todo.remove()
-    .then(() => {
-      done();
-    })
-    .catch(err => {
-      done(err);
-    });
+    Todo
+      .remove()
+      .then(() => {
+        done();
+      })
+      .catch(err => {
+        done(err);
+      });
 
   });
 

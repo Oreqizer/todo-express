@@ -47,14 +47,15 @@ UserSchema.pre('save', function normalize(next) {
   this.lastName = _.capitalize(_.deburr(this.lastName).toLowerCase());
 
   //noinspection JSCheckFunctionSignatures
-  crypt.hash(this.password)
-  .then(hash => {
-    this.password = hash;
-    next();
-  })
-  .catch(err => {
-    next(err);
-  });
+  crypt
+    .hash(this.password)
+    .then(hash => {
+      this.password = hash;
+      next();
+    })
+    .catch(err => {
+      next(err);
+    });
 
 });
 

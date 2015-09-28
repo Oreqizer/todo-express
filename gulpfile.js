@@ -15,7 +15,8 @@ let options = {
 
 };
 
-wrench.readdirSyncRecursive('./gulp')
+wrench
+  .readdirSyncRecursive('./gulp')
   .filter(file => (/\.js$/i).test(file))
   .map(file => {
     require(`./gulp/${file}`)(options);

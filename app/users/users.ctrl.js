@@ -100,31 +100,32 @@ module.exports.remove = function(req, res, next) {
  */
 module.exports.login = function(req, res, next) {
 
-  User.findOne({
-    // Searches both the username and email
-    $or: [
-      {username: req.body.username},
-      {email: req.body.email}
-    ]
-  })
-  .then(user => {
-    // No user found
-    if (!user) {
-      return next(e.error(404, 'User not found'));
-    }
-    req.user = user;
-    return crypt.checkPassword(req.body.password, user.password);
-  })
-  .then(match => {
-    // Invalid password
-    if (!match) {
-      return next(e.error(401, 'Invalid password'));
-    }
-    next();
-  })
-  .catch(err => {
-    next(err);
-  });
+  User
+    .findOne({
+      // Searches both the username and email
+      $or: [
+        {username: req.body.username},
+        {email: req.body.email}
+      ]
+    })
+    .then(user => {
+      // No user found
+      if (!user) {
+        return next(e.error(404, 'User not found'));
+      }
+      req.user = user;
+      return crypt.checkPassword(req.body.password, user.password);
+    })
+    .then(match => {
+      // Invalid password
+      if (!match) {
+        return next(e.error(401, 'Invalid password'));
+      }
+      next();
+    })
+    .catch(err => {
+      next(err);
+    });
 
 };
 
@@ -139,14 +140,15 @@ module.exports.register = function(req, res, next) {
 
   let user = new User(req.body);
 
-  user.save()
-  .then(user => {
-    res.status(201).send(user);
-    next();
-  })
-  .catch(err => {
-    next(e.mongoError(err));
-  });
+  user
+    .save()
+    .then(user => {
+      res.status(201).send(user);
+      next();
+    })
+    .catch(err => {
+      next(e.mongoError(err));
+    });
 
 };
 

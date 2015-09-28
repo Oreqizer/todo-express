@@ -24,11 +24,12 @@ module.exports = function() {
   mongoose.Promise = Promise;
 
   // Loads all models
-  wrench.readdirSyncRecursive('./app')
-  .filter(file => (/\.model\.js$/i).test(file))
-  .map(file => {
-    require(`../app/${file}`);
-  });
+  wrench
+    .readdirSyncRecursive('./app')
+    .filter(file => (/\.model\.js$/i).test(file))
+    .map(file => {
+      require(`../app/${file}`);
+    });
 
   return db;
 
