@@ -14,7 +14,7 @@ let mongoose = require('mongoose'),
 let User = mongoose.model('User');
 
 // Global test variables
-var user, user2, token, mock;
+let user, user2, token, mock;
 
 describe('User routes:', () => {
 

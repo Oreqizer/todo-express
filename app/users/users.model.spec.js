@@ -11,7 +11,7 @@ let expect = require('chai').expect,
 let User = mongoose.model('User');
 
 // Global test variables
-var user;
+let user;
 
 describe('User model:', () => {
 

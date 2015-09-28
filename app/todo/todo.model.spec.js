@@ -12,7 +12,7 @@ let Todo = mongoose.model('Todo'),
     User = mongoose.model('User');
 
 // Global test variables
-var todo, user;
+let todo, user;
 
 describe('Todo model:', () => {
 

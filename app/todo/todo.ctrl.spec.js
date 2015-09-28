@@ -15,7 +15,7 @@ let User = mongoose.model('User'),
     Todo = mongoose.model('Todo');
 
 // Global test variables
-var todo, todo2, client, mock;
+let todo, todo2, client, mock;
 
 describe('Todo routes:', () => {
 
