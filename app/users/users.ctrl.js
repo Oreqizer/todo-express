@@ -19,25 +19,6 @@ let jwt = require('jsonwebtoken'),
 let User = require('mongoose').model('User');
 
 /**
- * [Middleware] Finds all users in the database
- * @param {Object}   req  - http request object
- * @param {Object}   res  - http response object
- * @param {Function} next - invokes next middleware
- */
-module.exports.findAll = function(req, res, next) {
-
-  User.find()
-  .then(data => {
-    res.json(data);
-    next();
-  })
-  .catch(err => {
-    next(e.mongoError(err));
-  });
-
-};
-
-/**
  * [Middleware] Returns a user by ID
  * @param   {Object}   req  - http request object
  * @param   {Object}   res  - http response object
@@ -72,7 +53,7 @@ module.exports.update = function(req, res, next) {
   User.findByIdAndUpdate(req.params.id, {
     $set: req.body.user
   }, {
-    'new': true
+    new: true
   })
   .then(user => {
     if (!user) {

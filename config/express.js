@@ -11,7 +11,7 @@ let express = require('express');
 // Load middleware modules
 let bodyParser = require('body-parser'),
     morgan = require('morgan'),
-  compress = require('compression');
+    compress = require('compression');
 
 // Load helper modules
 let wrench = require('wrench');
@@ -56,7 +56,7 @@ module.exports = function() {
   app.use(express.static('./public'));
 
   // [Middleware] Error handler
-  app.use(function(err, req, res, next) {
+  app.use(function(err, req, res) {
 
     err.message = err.message || 'Internal server error';
     err.status = err.status || 500;

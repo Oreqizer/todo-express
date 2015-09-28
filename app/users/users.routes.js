@@ -18,13 +18,14 @@ let router = require('express').Router();
  */
 module.exports = function(app) {
 
-  // Find all users
-  router.get('/users', users.findAll);
+  // Authorize the user first if needed
+  router.all(/users/, users.authorize);
+  router.param('id', users.isOwner);
 
   // Find user by ID: search, update or remove
   router.get('/users/:id', users.find);
-  router.put('/users/:id', users.authorize, users.isOwner, users.update);
-  router.delete('/users/:id', users.authorize, users.isOwner, users.remove);
+  router.put('/users/:id', users.update);
+  router.delete('/users/:id', users.remove);
 
   // Login the requested user
   router.post('/login', users.login, users.token);

@@ -1,7 +1,6 @@
 'use strict';
 
-let gulp = require('gulp'),
-    stylish = require('jshint-stylish');
+let gulp = require('gulp');
 
 let $ = require('gulp-load-plugins')();
 

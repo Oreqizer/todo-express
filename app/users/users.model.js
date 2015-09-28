@@ -24,7 +24,7 @@ let Schema = mongoose.Schema;
 let UserSchema = new Schema({
 
   username: {type: String, required: true, index: {unique: true}, match: /^\w+$/i},
-  email: {type: String, required: true, index: {unique: true}, match: /.+\@.+\.+/},
+  email: {type: String, required: true, index: {unique: true}, match: /.+@.+\.+/},
   password: {type: String, validate: passwordVal()},
   scope: {type: String, enum: ['owner', 'admin', 'user'], default: 'user'},
   firstName: {type: String, match: /^[a-zA-Z]+$/},
@@ -46,6 +46,7 @@ UserSchema.pre('save', function normalize(next) {
   this.firstName = _.capitalize(_.deburr(this.firstName).toLowerCase());
   this.lastName = _.capitalize(_.deburr(this.lastName).toLowerCase());
 
+  //noinspection JSCheckFunctionSignatures
   crypt.hash(this.password)
   .then(hash => {
     this.password = hash;
@@ -65,7 +66,7 @@ UserSchema.pre('save', function normalize(next) {
  */
 function urlVal() {
   return [
-    function checkURL(url) {
+    function(url) {
       return v.isURL(url);
     },
     'Invalid webpage url'
@@ -80,7 +81,7 @@ function urlVal() {
  */
 function passwordVal() {
   return [
-    function checkPassword(password) {
+    function(password) {
       return password.length >= 6;
     },
     'Password too short'

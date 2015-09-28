@@ -63,7 +63,7 @@ module.exports.update = function(req, res, next) {
   Todo.findByIdAndUpdate(req.params.id, {
     $set: req.body.todo
   }, {
-    'new': true
+    new: true
   })
   .then(todo => {
     res.json(todo);

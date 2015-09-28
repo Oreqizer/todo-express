@@ -48,7 +48,7 @@ describe('Todo routes:', () => {
 
   beforeEach(done => {
 
-    // Create new 'User' model instances
+    // Create new 'Todo' model instances
     todo = new Todo({
 
       title: 'Test',
@@ -66,27 +66,26 @@ describe('Todo routes:', () => {
     });
 
     todo.save()
-    .then(() => {
-      return todo2.save();
-    })
-    .then(() => {
-      done();
-    })
-    .catch(err => {
-      done(err);
-    });
+      .then(() => {
+        return todo2.save();
+      })
+      .then(() => {
+        done();
+      })
+      .catch(err => {
+        done(err);
+      });
 
   });
 
   // Test retrieval route
-  describe('GET /todos/', () => {
+  describe('GET /todos/:', () => {
 
     it('should return all todos of a user', done => {
 
       request(app)
         .get('/api/todos')
         .send({token: client.token})
-        .expect('Content-Type', /json/)
         .expect(200)
         .end((err, res) => {
           if (err) {
@@ -104,7 +103,6 @@ describe('Todo routes:', () => {
       request(app)
         .get(`/api/todos/${todo.id}`)
         .send({token: client.token})
-        .expect('Content-Type', /json/)
         .expect(200)
         .end((err, res) => {
           if (err) {
@@ -142,7 +140,6 @@ describe('Todo routes:', () => {
             content: 'Sample text'
           }
         })
-        .expect('Content-Type', /json/)
         .expect(201)
         .end((err, res) => {
           if (err) {
@@ -186,7 +183,6 @@ describe('Todo routes:', () => {
             done: true
           }
         })
-        .expect('Content-Type', /json/)
         .expect(200)
         .end((err, res) => {
           if (err) {
@@ -202,7 +198,7 @@ describe('Todo routes:', () => {
     it('should not respond with a 401 - unauthorized', done => {
 
       request(app)
-        .put(`/api/todos/${todo._id}`)
+        .put(`/api/todos/${todo.id}`)
         .send({
           token: mock.token,
           todo: {
@@ -267,12 +263,12 @@ describe('Todo routes:', () => {
   afterEach(done => {
 
     Todo.remove()
-    .then(() => {
-      done();
-    })
-    .catch(err => {
-      done(err);
-    });
+      .then(() => {
+        done();
+      })
+      .catch(err => {
+        done(err);
+      });
 
   });
 

@@ -20,15 +20,16 @@ let router = require('express').Router();
 module.exports = function(app) {
 
   // Authorize the user first
-  router.all(/\/todos/, users.authorize);
+  router.all(/todos/, users.authorize);
+  router.param('id', todo.getTodo);
 
   // Find todos
   router.get('/todos', todo.findAll);
-  router.get('/todos/:id', todo.getTodo, todo.find);
+  router.get('/todos/:id', todo.find);
 
   // Find todo by ID: update or remove
-  router.put('/todos/:id', todo.getTodo, todo.update);
-  router.delete('/todos/:id', todo.getTodo, todo.remove);
+  router.put('/todos/:id', todo.update);
+  router.delete('/todos/:id', todo.remove);
 
   // Post a new todo
   router.post('/todos', todo.post);

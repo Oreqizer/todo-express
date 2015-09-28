@@ -20,7 +20,13 @@ describe('User routes:', () => {
 
   before(() => {
 
-    mock = mongoose.Types.ObjectId();
+    let id = mongoose.Types.ObjectId();
+    mock = {
+      id,
+      token: jwt.sign({
+        iss: id
+      }, config.secret)
+    };
 
   });
 
@@ -44,47 +50,29 @@ describe('User routes:', () => {
     });
 
     user.save()
-    .then(() => {
-      token = jwt.sign({
-        iss: user._id
-      }, config.secret);
-      return user2.save();
-    })
-    .then(() => {
-      done();
-    })
-    .catch(err => {
-      done(err);
-    });
+      .then(() => {
+        token = jwt.sign({
+          iss: user.id
+        }, config.secret);
+        return user2.save();
+      })
+      .then(() => {
+        done();
+      })
+      .catch(err => {
+        done(err);
+      });
 
   });
 
   // Test retrieval routes
-  describe('GET /users/', () => {
-
-    it('should return all users', done => {
-
-      request(app)
-        .get('/api/users')
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .end((err, res) => {
-          if (err) {
-            return done(err);
-          }
-          expect(res.body).to.be.an('array');
-          expect(res.body).to.have.length(2);
-          expect(res.body[0].username).to.equal('test');
-          done();
-        });
-
-    });
+  describe('GET /users/:id', () => {
 
     it('should return a user by id', done => {
 
       request(app)
-        .get(`/api/users/${user._id}`)
-        .expect('Content-Type', /json/)
+        .get(`/api/users/${user.id}`)
+        .send({token})
         .expect(200)
         .end((err, res) => {
           if (err) {
@@ -97,19 +85,20 @@ describe('User routes:', () => {
 
     });
 
-    it('should respond with a 404 - user not found', done => {
+    it('should respond with a 401 - no token found', done => {
 
       request(app)
-        .get(`/api/users/${mock}`)
-        .expect(404, done);
+        .get(`/api/users/${user.id}`)
+        .expect(401, done);
 
     });
 
-    it('should respond with a 409 - conflict', done => {
+    it('should respond with a 404 - user not found', done => {
 
       request(app)
-        .get('/api/users/randomuser')
-        .expect(409, done);
+        .get(`/api/users/${mock.id}`)
+        .send({token: mock.token})
+        .expect(404, done);
 
     });
 
@@ -121,14 +110,13 @@ describe('User routes:', () => {
     it('should update a user info', done => {
 
       request(app)
-        .put(`/api/users/${user._id}`)
+        .put(`/api/users/${user.id}`)
         .send({
           token,
           user: {
             username: 'updated'
           }
         })
-        .expect('Content-Type', /json/)
         .expect(200)
         .end((err, res) => {
           if (err) {
@@ -144,7 +132,7 @@ describe('User routes:', () => {
     it('should respond with a 401 - wrong user', done => {
 
       request(app)
-        .put(`/api/users/${user2._id}`)
+        .put(`/api/users/${mock.id}`)
         .send({
           token: token,
           user: {
@@ -158,7 +146,7 @@ describe('User routes:', () => {
     it('should respond with a 401 - no token found', done => {
 
       request(app)
-        .put(`/api/users/${user._id}`)
+        .put(`/api/users/${user.id}`)
         .expect(401, done);
 
     });
@@ -171,10 +159,8 @@ describe('User routes:', () => {
     it('should delete the user', done => {
 
       request(app)
-        .delete(`/api/users/${user._id}`)
-        .send({
-          token: token
-        })
+        .delete(`/api/users/${user.id}`)
+        .send({token})
         .expect(204, done);
 
     });
@@ -182,10 +168,8 @@ describe('User routes:', () => {
     it('should respond with a 401 - wrong user', done => {
 
       request(app)
-        .delete(`/api/users/${user2._id}`)
-        .send({
-          token: token
-        })
+        .delete(`/api/users/${mock.id}`)
+        .send({token})
         .expect(401, done);
 
     });
@@ -193,7 +177,7 @@ describe('User routes:', () => {
     it('should respond with a 401 - no token found', done => {
 
       request(app)
-        .delete(`/api/users/${user._id}`)
+        .delete(`/api/users/${user.id}`)
         .expect(401, done);
 
     });
@@ -208,7 +192,6 @@ describe('User routes:', () => {
       request(app)
         .post('/api/login')
         .send({username: 'test', password: 'heslojeveslo'})
-        .expect('Content-Type', /json/)
         .expect(200)
         .end((err, res) => {
           if (err) {
@@ -251,7 +234,6 @@ describe('User routes:', () => {
       request(app)
         .post('/api/register')
         .send({username: 'test3', email: 'test3@test.com', password: 'heslojeveslo'})
-        .expect('Content-Type', /json/)
         .expect(201)
         .end((err, res) => {
           if (err) {
@@ -280,12 +262,12 @@ describe('User routes:', () => {
   afterEach(done => {
 
     User.remove()
-    .then(() => {
-      done();
-    })
-    .catch(err => {
-      done(err);
-    });
+      .then(() => {
+        done();
+      })
+      .catch(err => {
+        done(err);
+      });
 
   });
 

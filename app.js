@@ -12,9 +12,9 @@ let express = require('./config/express'),
 // Load config
 let config = require('./config/config');
 
-// Start the app and database
-let db = mongoose(),
-    app = express();
+// Start the database and the app
+mongoose();
+let app = express();
 
 // Listen at the configured port
 app.listen(config.port);

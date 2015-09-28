@@ -9,7 +9,7 @@
  * Creates an error with required parameters to be sent back to the client
  * @param   {Number} code    - the status code of the error
  * @param   {String} message - brief description of the error
- * @returns {Error}  the created error
+ * @returns {Object} the created error
  */
 module.exports.error = function(code, message) {
   let err = new Error(message);
@@ -20,7 +20,7 @@ module.exports.error = function(code, message) {
 /**
  * Handles errors specific to MongoDB
  * @param   {Object} err - the thrown error
- * @returns {Error}  the same error with additional information
+ * @returns {Object} the same error with additional information
  */
 module.exports.mongoError = function(err) {
 
