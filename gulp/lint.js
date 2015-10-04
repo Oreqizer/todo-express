@@ -10,7 +10,8 @@ module.exports = function(options) {
   gulp.task('lint', () => {
 
     gulp.src(options.app)
-      .pipe($.plumber())
+      .pipe($.eslint())
+      .pipe($.eslint.format())
       .pipe($.jshint())
       .pipe($.jscs())
       .pipe($.jscsStylish.combineWithHintResults())
