@@ -1,27 +1,30 @@
 'use strict';
 
 // Load modules
-let app = require('../../app'),
-    config = require('../../config/config');
+const app = require('../../app');
+const config = require('../../config/config');
 
 // Load dependencies
-let mongoose = require('mongoose'),
-    expect = require('chai').expect,
-    request = require('supertest'),
-    jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
+const expect = require('chai').expect;
+const request = require('supertest');
+const jwt = require('jsonwebtoken');
 
 // Load models
-let User = mongoose.model('User'),
-    Todo = mongoose.model('Todo');
+const User = mongoose.model('User');
+const Todo = mongoose.model('Todo');
 
 // Global test variables
-let todo, todo2, client, mock;
+let todo;
+let todo2;
+let client;
+let mock;
 
 describe('Todo routes:', () => {
 
   before(() => {
 
-    let user = new User({
+    const user = new User({
 
       username: 'test',
       email: 'test@test.com',
@@ -36,7 +39,7 @@ describe('Todo routes:', () => {
       }, config.secret)
     };
 
-    let id = mongoose.Types.ObjectId();
+    const id = mongoose.Types.ObjectId();
     mock = {
       id,
       token: jwt.sign({
@@ -92,6 +95,7 @@ describe('Todo routes:', () => {
           if (err) {
             return done(err);
           }
+
           expect(res.body).to.be.an('array');
           expect(res.body).to.have.length(2);
           done();
@@ -109,6 +113,7 @@ describe('Todo routes:', () => {
           if (err) {
             return done(err);
           }
+
           expect(res.body).to.be.an('object');
           expect(res.body.title).to.equal('Test');
           done();
@@ -146,6 +151,7 @@ describe('Todo routes:', () => {
           if (err) {
             return done(err);
           }
+
           expect(res.body).to.be.an('object');
           expect(res.body.title).to.equal('New');
           done();
@@ -189,6 +195,7 @@ describe('Todo routes:', () => {
           if (err) {
             return done(err);
           }
+
           expect(res.body).to.be.an('object');
           expect(res.body.title).to.equal('Updated');
           done();

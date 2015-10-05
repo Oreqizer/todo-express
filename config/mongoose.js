@@ -6,11 +6,11 @@
  */
 
 // Load main modules
-let mongoose = require('mongoose'),
-    config = require('./config');
+const mongoose = require('mongoose');
+const config = require('./config');
 
 // Load helper modules
-let wrench = require('wrench');
+const wrench = require('wrench');
 
 /**
  * Sets up the necessary configuration of Mongoose
@@ -18,7 +18,7 @@ let wrench = require('wrench');
  */
 module.exports = function() {
 
-  let db = mongoose.connect(config.db);
+  const db = mongoose.connect(config.db);
 
   // Make Mongoose use the native promises
   mongoose.Promise = Promise;

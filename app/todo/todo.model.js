@@ -7,16 +7,16 @@
  */
 
 // Load dependencies
-let mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
 // Load module builder
-let Schema = mongoose.Schema;
+const Schema = mongoose.Schema;
 
 /**
  * Defines the todo model schema
  * @class
  */
-let TodoSchema = new Schema({
+const TodoSchema = new Schema({
 
   title: {type: String, required: true, index: true},
   content: {type: String},

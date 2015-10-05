@@ -5,6 +5,6 @@
  * @module config
  */
 
-let env = process.env.NODE_ENV || 'development';
+const env = process.env.NODE_ENV || 'development';
 
 module.exports = require(`./env/${env}.js`);

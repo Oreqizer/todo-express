@@ -6,18 +6,18 @@
  */
 
 // Load main modules
-let express = require('express');
+const express = require('express');
 
 // Load middleware modules
-let bodyParser = require('body-parser'),
-    morgan = require('morgan'),
-    compress = require('compression');
+const bodyParser = require('body-parser');
+const morgan = require('morgan');
+const compress = require('compression');
 
 // Load helper modules
-let wrench = require('wrench');
+const wrench = require('wrench');
 
 // Load Express plugins
-let handlebars = require('express-handlebars');
+const handlebars = require('express-handlebars');
 
 /**
  * Sets up all the necessary configuration of Express
@@ -25,7 +25,7 @@ let handlebars = require('express-handlebars');
  */
 module.exports = function() {
 
-  let app = express();
+  const app = express();
 
   if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
@@ -66,4 +66,5 @@ module.exports = function() {
   });
 
   return app;
+
 };

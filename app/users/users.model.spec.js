@@ -4,11 +4,11 @@
 require('../../app');
 
 // Load dependencies
-let expect = require('chai').expect,
-    mongoose = require('mongoose');
+const expect = require('chai').expect;
+const mongoose = require('mongoose');
 
 // Load models
-let User = mongoose.model('User');
+const User = mongoose.model('User');
 
 // Global test variables
 let user;

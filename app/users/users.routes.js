@@ -7,10 +7,10 @@
  */
 
 // Load modules
-let users = require('./users.ctrl');
+const users = require('./users.ctrl');
 
 // Load Express router
-let router = require('express').Router();
+const router = require('express').Router();
 
 /**
  * Applies all user related routes to the app

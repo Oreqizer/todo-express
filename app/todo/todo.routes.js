@@ -7,11 +7,11 @@
  */
 
 // Load modules
-let todo = require('./todo.ctrl'),
-    users = require('../users/users.ctrl');
+const todo = require('./todo.ctrl');
+const users = require('../users/users.ctrl');
 
 // Load Express router
-let router = require('express').Router();
+const router = require('express').Router();
 
 /**
  * Applies all todo related routes to the app

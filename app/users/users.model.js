@@ -7,21 +7,21 @@
  */
 
 // Load modules
-let crypt = require('../../utils/crypt');
+const crypt = require('../../utils/crypt');
 
 // Load dependencies
-let mongoose = require('mongoose'),
-    v = require('validator'),
-    _ = require('lodash');
+const mongoose = require('mongoose');
+const v = require('validator');
+const _ = require('lodash');
 
 // Load module builder
-let Schema = mongoose.Schema;
+const Schema = mongoose.Schema;
 
 /**
  * Defines the user model schema
  * @class
  */
-let UserSchema = new Schema({
+const UserSchema = new Schema({
 
   username: {type: String, required: true, index: {unique: true}, match: /^\w+$/i},
   email: {type: String, required: true, index: {unique: true}, match: /.+@.+\.+/},
@@ -70,6 +70,7 @@ function urlVal() {
     function(url) {
       return v.isURL(url);
     },
+
     'Invalid webpage url'
   ];
 }
@@ -85,6 +86,7 @@ function passwordVal() {
     function(password) {
       return password.length >= 6;
     },
+
     'Password too short'
   ];
 }

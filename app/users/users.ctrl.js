@@ -7,16 +7,16 @@
  */
 
 // Load modules
-let config = require('../../config/config'),
-    crypt = require('../../utils/crypt'),
-    e = require('../../utils/error');
+const config = require('../../config/config');
+const crypt = require('../../utils/crypt');
+const e = require('../../utils/error');
 
 // Load dependencies
-let jwt = require('jsonwebtoken'),
-    moment = require('moment');
+const jwt = require('jsonwebtoken');
+const moment = require('moment');
 
 // Load models
-let User = require('mongoose').model('User');
+const User = require('mongoose').model('User');
 
 /**
  * [Middleware] Returns a user by ID
@@ -32,6 +32,7 @@ module.exports.find = function(req, res, next) {
     if (!user) {
       return next(e.error(404, 'User not found'));
     }
+
     res.json(user);
     next();
   })
@@ -59,6 +60,7 @@ module.exports.update = function(req, res, next) {
     if (!user) {
       return next(e.error(404, 'User not found'));
     }
+
     res.json(user);
     next();
   })
@@ -82,6 +84,7 @@ module.exports.remove = function(req, res, next) {
     if (!user) {
       return next(e.error(404, 'User not found'));
     }
+
     res.status(204).send('User deleted');
     next();
   })
@@ -113,6 +116,7 @@ module.exports.login = function(req, res, next) {
       if (!user) {
         return next(e.error(404, 'User not found'));
       }
+
       req.user = user;
       return crypt.checkPassword(req.body.password, user.password);
     })
@@ -121,6 +125,7 @@ module.exports.login = function(req, res, next) {
       if (!match) {
         return next(e.error(401, 'Invalid password'));
       }
+
       next();
     })
     .catch(err => {
@@ -176,6 +181,7 @@ module.exports.authorize = function(req, res, next) {
   if (decoded.exp < Date.now()) {
     return next(e.error(401, 'Access token expired'));
   }
+
   req.body.iss = decoded.iss;
 
   next();

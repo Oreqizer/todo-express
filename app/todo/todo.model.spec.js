@@ -4,22 +4,23 @@
 require('../../app');
 
 // Load dependencies
-let expect = require('chai').expect,
-    mongoose = require('mongoose');
+const expect = require('chai').expect;
+const mongoose = require('mongoose');
 
 // Load models
-let Todo = mongoose.model('Todo'),
-    User = mongoose.model('User');
+const Todo = mongoose.model('Todo');
+const User = mongoose.model('User');
 
 // Global test variables
-let todo, user;
+let todo;
+let user;
 
 describe('Todo model:', () => {
 
   before(() => {
 
     // Create a sample todo owner
-    user = new User ({
+    user = new User({
 
       username: 'test',
       email: 'test@test.com',

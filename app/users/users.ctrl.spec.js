@@ -1,20 +1,23 @@
 'use strict';
 
 // Load modules
-let app = require('../../app'),
-    config = require('../../config/config');
+const app = require('../../app');
+const config = require('../../config/config');
 
 // Load dependencies
-let mongoose = require('mongoose'),
-    expect = require('chai').expect,
-    request = require('supertest'),
-    jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
+const expect = require('chai').expect;
+const request = require('supertest');
+const jwt = require('jsonwebtoken');
 
 // Load models
-let User = mongoose.model('User');
+const User = mongoose.model('User');
 
 // Global test variables
-let user, user2, token, mock;
+let user;
+let user2;
+let token;
+let mock;
 
 describe('User routes:', () => {
 
@@ -79,6 +82,7 @@ describe('User routes:', () => {
           if (err) {
             return done(err);
           }
+
           expect(res.body).to.be.an('object');
           expect(res.body.username).to.equal('test');
           done();
@@ -123,6 +127,7 @@ describe('User routes:', () => {
           if (err) {
             return done(err);
           }
+
           expect(res.body).to.be.an('object');
           expect(res.body.username).to.equal('updated');
           done();
@@ -198,6 +203,7 @@ describe('User routes:', () => {
           if (err) {
             return done(err);
           }
+
           expect(res.body).to.be.an('object');
           expect(res.body.token).to.be.a('string');
           expect(res.body.expires).to.be.a('number');
@@ -240,6 +246,7 @@ describe('User routes:', () => {
           if (err) {
             return done(err);
           }
+
           expect(res.body).to.be.an('object');
           expect(res.body.username).to.equal('test3');
           expect(res.body.password).not.to.equal('heslojeveslo');

@@ -7,10 +7,10 @@
  */
 
 // Load modules
-let e = require('../../utils/error');
+const e = require('../../utils/error');
 
 // Load models
-let Todo = require('mongoose').model('Todo');
+const Todo = require('mongoose').model('Todo');
 
 /**
  * [Middleware] Finds all todos of a user
@@ -104,7 +104,7 @@ module.exports.remove = function(req, res, next) {
  */
 module.exports.post = function(req, res, next) {
 
-  let todo = new Todo(req.body.todo);
+  const todo = new Todo(req.body.todo);
 
   todo
     .save()
@@ -133,9 +133,11 @@ module.exports.getTodo = function(req, res, next) {
       if (!todo) {
         return next(e.error(404, 'Todo not found'));
       }
+
       if (req.body.iss !== todo._owner) {
         return next(e.error(401, 'Todo does not belong to user'));
       }
+
       next();
     })
     .catch(err => {
